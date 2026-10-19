@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import Hero from "../components/sections/Hero.astro";
+import Services from "../components/sections/Services.astro";
+import Gallery from "../components/sections/Gallery.astro";
+import WhyUs from "../components/sections/WhyUs.astro";
+import Process from "../components/sections/Process.astro";
+import ContactForm from "../components/contact/ContactForm.astro";
+
+import { site } from "../data/site";
+import { sections } from "../data/sections";
+---
+
+<Layout
+  title={site.seo.title}
+  description={site.seo.description}
+>
+
+  <Hero />
+
+  <Services />
+
+  {
+    sections.gallery && (
+      <Gallery />
+    )
+  }
+
+  <WhyUs />
+
+  <Process />
+
+  <ContactForm />
+
+</Layout>

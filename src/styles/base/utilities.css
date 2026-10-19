@@ -1,0 +1,30 @@
+.container {
+  max-width: var(--container-max-width);
+
+  margin: auto;
+
+  padding: 0 20px;
+}
+
+section {
+  padding: 90px 0;
+}
+
+/* Décalage pour la navigation sticky */
+section[id] {
+  scroll-margin-top: 110px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  section {
+    padding: 70px 0;
+  }
+
+  section[id] {
+    scroll-margin-top: 95px;
+  }
+}

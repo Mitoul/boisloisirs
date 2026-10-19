@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductHero from "../../components/products/ProductHero.astro";
+import ProductEssences from "../../components/products/ProductEssences.astro";
+import ProductPricing from "../../components/products/ProductPricing.astro";
+import ProductDelivery from "../../components/products/ProductDelivery.astro";
+import RelatedProduct from "../../components/products/RelatedProduct.astro";
+import LiveProductContent from "../../components/products/LiveProductContent.astro";
+import CTA from "../../components/sections/CTA.astro";
+
+const title = "Bois de chauffage sec en vrac | Bois, Aménagements & Loisirs";
+const description =
+  "Bois de chauffage sec prêt à brûler, humidité inférieure à 20 %, plusieurs essences disponibles et livraison en vrac dans votre région.";
+---
+
+<Layout title={title} description={description}>
+  <div id="wood-hero"><ProductHero /></div>
+  <ProductEssences />
+  <div id="wood-pricing"><ProductPricing /></div>
+  <ProductDelivery />
+  <RelatedProduct />
+  <CTA />
+
+  <LiveProductContent product="wood" priceSmallId="wood-price-small" priceLargeId="wood-price-large" imageId="wood-hero-image" />
+</Layout>

@@ -1,0 +1,164 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Button from "../../components/ui/Button.astro";
+import LiveProductContent from "../../components/products/LiveProductContent.astro";
+import { pelletProduct } from "../../content/pellets";
+---
+
+<Layout
+  title="Pellets DIN+ en sacs | Bois, Aménagements & Loisirs"
+  description="Comfo Pellets DIN+ fabriqués à partir de bois 100 % résineux belge. Palettes de 65 sacs de 15 kg, soit 975 kg, avec livraison selon votre région."
+>
+  <main class="pellet-page">
+    <section class="product-hero pellet-hero">
+      <div class="container product-hero-grid">
+        <div class="product-hero-copy">
+          <nav class="product-breadcrumb" aria-label="Fil d’Ariane">
+            <a href="/">Accueil</a>
+            <span aria-hidden="true">/</span>
+            <a href="/">Produits</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Pellets</span>
+          </nav>
+
+          <span class="product-eyebrow">{pelletProduct.eyebrow}</span>
+          <h1>{pelletProduct.title}</h1>
+          <p class="product-hero-description">{pelletProduct.description}</p>
+
+          <ul class="product-highlights" aria-label="Caractéristiques des pellets">
+            {pelletProduct.highlights.map((highlight) => (
+              <li><span aria-hidden="true">✓</span>{highlight}</li>
+            ))}
+          </ul>
+
+          <div class="product-hero-actions">
+            <Button href="/contact/?type=commande">Demander un tarif</Button>
+            <Button href="#conditionnement" variant="secondary">Voir le conditionnement</Button>
+          </div>
+        </div>
+
+        <div class="product-hero-media">
+          <img id="pellets-hero-image" src={pelletProduct.image.src} alt={pelletProduct.image.alt} loading="eager" fetchpriority="high" />
+          <div class="product-hero-badge pellet-badge">
+            <strong>65 × 15 kg</strong>
+            <span>975 kg par palette</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-essences pellet-specs">
+      <div class="container">
+        <div class="product-section-heading">
+          <span>Le produit</span>
+          <h2>Des pellets pensés pour votre chauffage</h2>
+          <p>Une offre simple : un produit identifié, un conditionnement clair et une livraison adaptée à votre région.</p>
+        </div>
+
+        <div class="essences-grid">
+          {pelletProduct.specs.map((spec) => (
+            <article class="essence-card">
+              <span class="essence-number">{spec.number}</span>
+              <h3>{spec.title}</h3>
+              <p>{spec.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="conditionnement" class="pellet-packaging">
+      <div class="container pellet-packaging-grid">
+        <div class="pellet-packaging-media">
+          <img
+            id="pellets-detail-image" src="/pellets-page.jpg"
+            alt="Granulés de bois Comfo Pellets"
+            loading="lazy"
+          />
+        </div>
+        <div class="pellet-packaging-copy">
+          <span>Conditionnement</span>
+          <h2>65 sacs de 15 kg</h2>
+          <p>Une palette représente 975 kg de pellets. Le conditionnement permet de commander une quantité clairement définie et de faciliter la livraison.</p>
+
+          <div class="pellet-stats">
+            <div><strong>65</strong><span>sacs</span></div>
+            <div><strong>15 kg</strong><span>par sac</span></div>
+            <div><strong>975 kg</strong><span>par palette</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tarifs" class="product-pricing pellet-pricing">
+      <div class="container">
+        <div class="product-pricing-heading">
+          <div>
+            <span>Tarifs</span>
+            <h2>Un tarif communiqué selon votre livraison</h2>
+          </div>
+          <p>{pelletProduct.pricing.description}</p>
+        </div>
+
+        <div class="pellet-price-card">
+          <div>
+            <span>{pelletProduct.pricing.label}</span>
+            <strong>{pelletProduct.pricing.value}</strong>
+          </div>
+          <Button href="/contact/?type=commande">Demander mon tarif</Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-delivery pellet-delivery">
+      <div class="container delivery-grid">
+        <div class="delivery-copy">
+          <span>Livraison</span>
+          <h2>{pelletProduct.delivery.title}</h2>
+          <p>{pelletProduct.delivery.description}</p>
+        </div>
+
+        <div class="delivery-steps">
+          <div class="delivery-step">
+            <span>01</span>
+            <div><strong>Votre demande</strong><p>Indiquez votre adresse et la quantité souhaitée.</p></div>
+          </div>
+          <div class="delivery-step">
+            <span>02</span>
+            <div><strong>Votre tarif</strong><p>Nous vous précisons le prix et les conditions de transport.</p></div>
+          </div>
+          <div class="delivery-step">
+            <span>03</span>
+            <div><strong>Votre livraison</strong><p>La palette est livrée à l'adresse convenue.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="related-product">
+      <div class="container">
+        <div class="related-product-box">
+          <div>
+            <span>Autre produit</span>
+            <h2>Vous cherchez plutôt du bois de chauffage ?</h2>
+            <p>Découvrez notre bois de chauffage sec, disponible en vrac et en plusieurs essences.</p>
+          </div>
+          <Button href="/produits/bois/" variant="secondary">Découvrir le bois</Button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pellet-final-cta">
+      <div class="container">
+        <div class="pellet-final-cta-box">
+          <span>Besoin de pellets ?</span>
+          <h2>Demandez votre tarif de livraison.</h2>
+          <p>Indiquez-nous votre région et nous vous communiquerons les informations adaptées à votre commande.</p>
+          <Button href="/contact/?type=commande">Demander un tarif</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <LiveProductContent product="pellets" imageId="pellets-hero-image" />
+</Layout>

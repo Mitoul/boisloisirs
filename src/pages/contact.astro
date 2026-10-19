@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ContactForm from "../components/contact/ContactForm.astro";
+
+const requestType = Astro.url.searchParams.get("type") === "devis" ? "devis" : "commande";
+---
+
+<Layout
+  title="Contact & demande de devis | Bois, Aménagements & Loisirs"
+  description="Passez une commande ou demandez un devis pour votre bois de chauffage, vos pellets ou nos services."
+>
+  <main class="contact-page">
+    <section class="contact-page-hero">
+      <div class="container contact-page-hero-inner">
+        <a href="/" class="contact-breadcrumb">Accueil <span>/</span> Contact</a>
+        <p class="eyebrow">Contact & commandes</p>
+        <h1>Parlons de votre projet.</h1>
+        <p>Une commande de bois ou de pellets, une demande de devis ou une question&nbsp;? Remplissez le formulaire et nous vous recontacterons avec les informations adaptées.</p>
+      </div>
+    </section>
+
+    <ContactForm defaultRequestType={requestType} />
+  </main>
+</Layout>

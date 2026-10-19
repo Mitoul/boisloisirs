@@ -1,0 +1,78 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+
+import { whyUs } from "../../content/whyUs";
+---
+
+<section id="why-us" class="why-us">
+
+  <div class="container">
+
+    <SectionTitle
+      title={whyUs.title}
+      subtitle={whyUs.subtitle}
+    />
+
+    <div class="why-grid">
+
+      <div class="why-content">
+
+        {
+          whyUs.items.map((item) => (
+
+            <div class="why-item">
+
+              <span>
+                {item.icon}
+              </span>
+
+              <div>
+
+                <h3>
+                  {item.title}
+                </h3>
+
+                <p>
+                  {item.description}
+                </p>
+
+              </div>
+
+            </div>
+
+          ))
+        }
+
+      </div>
+
+      <div class="why-card">
+
+        <h3>
+          {whyUs.card.title}
+        </h3>
+
+        <p>
+          {whyUs.card.description}
+        </p>
+
+        <ul>
+
+          {
+            whyUs.card.features.map((feature) => (
+
+              <li>
+                ✔ {feature}
+              </li>
+
+            ))
+          }
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

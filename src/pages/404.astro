@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.astro";
+import { site } from "../data/site";
+---
+
+<Layout
+  title={`Page introuvable | ${site.company.name}`}
+  description="La page demandée n'existe pas ou a été déplacée."
+>
+
+<section class="not-found">
+
+  <div class="container">
+
+    <span class="error-code">
+      404
+    </span>
+
+    <h1>
+      Oups ! Cette page n'existe pas.
+    </h1>
+
+    <p>
+      Il semble que la page que vous recherchez ait été déplacée
+      ou n'existe plus.
+    </p>
+
+    <Button href="/">
+      Retour à l'accueil
+    </Button>
+
+  </div>
+
+</section>
+
+</Layout>
+
+<style>
+.not-found {
+  padding: 120px 0;
+  text-align: center;
+}
+
+.error-code {
+  display: block;
+
+  font-size: 6rem;
+
+  font-weight: 800;
+
+  color: var(--color-primary-action);
+
+  line-height: 1;
+
+  margin-bottom: 20px;
+}
+
+.not-found h1 {
+  margin-bottom: 20px;
+}
+
+.not-found p {
+  max-width: 600px;
+
+  margin: 0 auto 40px;
+
+  color: var(--color-text-light);
+
+  line-height: 1.8;
+}
+</style>

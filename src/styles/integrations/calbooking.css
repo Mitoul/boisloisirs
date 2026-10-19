@@ -1,0 +1,214 @@
+/* calbooking.css
+   Styles du composant de prise de rendez-vous, alignés sur la DA de mbhydro.netlify.app
+   (bleu principal #1474c4 vu dans le meta-theme-color du site, boutons arrondis,
+   cartes avec ombre douce, typo système).
+   Ajustez les variables ci-dessous si votre charte évolue : tout le composant en dépend. */
+
+:root {
+  --cal-primary: #1474c4;
+  --cal-primary-dark: #0f5a99;
+  --cal-primary-light: #e8f2fb;
+  --cal-accent: #f5820c; /* touche "chauffage" pour les icônes/hover, à ajuster si besoin */
+  --cal-text: #1a2733;
+  --cal-text-muted: #5c6b78;
+  --cal-bg: #ffffff;
+  --cal-border: #e2e8f0;
+  --cal-radius: 14px;
+  --cal-radius-sm: 8px;
+  --cal-shadow: 0 10px 30px rgba(20, 116, 196, 0.12);
+  --cal-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Bouton déclencheur "Prendre rendez-vous" */
+.cal-trigger-btn {
+  font-family: var(--cal-font);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background-color: var(--cal-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(20, 116, 196, 0.25);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.cal-trigger-btn:hover {
+  background-color: var(--cal-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(20, 116, 196, 0.3);
+}
+
+.cal-trigger-btn:active {
+  transform: translateY(0);
+}
+
+/* Modale de choix du type de rendez-vous
+   Positionnement et taille forcés en !important : ça isole le composant de tout style
+   global du site qui viserait l'élément <dialog> (reset CSS, autre lightbox, etc.) et qui
+   casserait sinon le centrage ou la taille. */
+dialog.cal-modal {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: var(--cal-radius) !important;
+  padding: 0 !important;
+  width: min(560px, 92vw) !important;
+  max-height: min(600px, 85vh) !important;
+  overflow-y: auto !important;
+  box-shadow: var(--cal-shadow);
+  background: var(--cal-bg);
+  font-family: var(--cal-font);
+  color: var(--cal-text);
+}
+
+.cal-modal::backdrop {
+  background: rgba(15, 27, 38, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+/* Petite animation d'apparition */
+.cal-modal[open] {
+  animation: cal-modal-in 0.2s ease-out;
+}
+
+@keyframes cal-modal-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Layout en flex + gap plutôt que des marges sur chaque élément :
+   ça évite tout effet de "fusion de marges" (margin collapsing) avec des styles
+   hérités (ex: marge par défaut d'un <h2>) qui créerait un grand vide avant les cartes. */
+.cal-modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 2.75rem 1.75rem 1.75rem;
+  box-sizing: border-box;
+}
+
+.cal-modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cal-primary-light);
+  color: var(--cal-primary-dark);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+}
+
+.cal-modal-close:hover {
+  background-color: #d7e9f8;
+}
+
+.cal-modal-title {
+  margin: 0 !important;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--cal-text);
+}
+
+.cal-modal-subtitle {
+  margin: 0 !important;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--cal-text-muted);
+}
+
+/* Grille des choix — passe automatiquement à plusieurs colonnes si de nouvelles
+   prestations sont ajoutées au tableau rdvOptions */
+.cal-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 0 !important;
+}
+
+.cal-option-card {
+  font-family: var(--cal-font);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.35rem;
+  margin: 0 !important;
+  padding: 1.25rem 1.1rem;
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius-sm);
+  background: var(--cal-bg);
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+}
+
+.cal-option-card:hover,
+.cal-option-card:focus-visible {
+  border-color: var(--cal-primary);
+  box-shadow: 0 8px 20px rgba(20, 116, 196, 0.15);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.cal-option-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.cal-option-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--cal-text);
+}
+
+.cal-option-desc {
+  font-size: 0.85rem;
+  color: var(--cal-text-muted);
+  line-height: 1.4;
+}
+
+.cal-option-cta {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cal-primary);
+}
+
+.cal-option-card:hover .cal-option-cta {
+  color: var(--cal-accent);
+}
+
+/* Petits écrans */
+@media (max-width: 480px) {
+  .cal-modal-content {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .cal-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

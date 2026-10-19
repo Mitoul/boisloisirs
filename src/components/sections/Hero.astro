@@ -1,0 +1,65 @@
+---
+import Button from "../ui/Button.astro";
+
+import { hero } from "../../content/hero";
+import { heroImage } from "../../content/heroImage";
+---
+
+<section class:list={["hero", heroImage && "hero--image"]}>
+  {
+    heroImage && (
+      <>
+        <img
+          class="hero-background"
+          src={heroImage.src}
+          alt={heroImage.alt}
+          loading="eager"
+        />
+        <div class="hero-overlay" aria-hidden="true"></div>
+      </>
+    )
+  }
+
+  <div class="container hero-content">
+    <div class="hero-text">
+      <span class="hero-tag">
+        {hero.tag}
+      </span>
+
+      <h1>
+        {hero.title}
+      </h1>
+
+      <p class="hero-subtitle">
+        {hero.subtitle}
+      </p>
+
+      <div class="hero-actions">
+        <Button href={hero.primaryButton.href}>
+          {hero.primaryButton.label}
+        </Button>
+
+        <Button
+          href={hero.secondaryButton.href}
+          variant="secondary"
+        >
+          {hero.secondaryButton.label}
+        </Button>
+      </div>
+
+      {
+        hero.highlights?.length > 0 && (
+          <ul class="hero-highlights">
+            {
+              hero.highlights.map((highlight) => (
+                <li>
+                  ✓ {highlight}
+                </li>
+              ))
+            }
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>

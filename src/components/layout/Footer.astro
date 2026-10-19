@@ -1,0 +1,101 @@
+---
+import Logo from "./Logo.astro";
+
+import { site } from "../../data/site";
+import { footer } from "../../content/footer";
+---
+
+<footer class="site-footer">
+
+  <div class="container footer-content">
+
+    <section
+      class="footer-brand"
+      aria-labelledby="footer-brand-title"
+    >
+
+      <h2
+        id="footer-brand-title"
+        class="visually-hidden"
+      >
+        Informations sur l'entreprise
+      </h2>
+
+      <Logo width={150} />
+
+      <p>
+        {footer.brand.description}
+      </p>
+
+    </section>
+
+
+    <section
+      class="footer-contact"
+      aria-labelledby="footer-contact-title"
+    >
+
+      <h2 id="footer-contact-title">
+        {footer.contact.title}
+      </h2>
+
+      <address>
+
+        <ul>
+
+          <li>
+
+            <a href={`tel:${site.company.phone}`}>
+              {site.company.phone}
+            </a>
+
+          </li>
+
+
+          <li>
+
+            <a href={`mailto:${site.company.email}`}>
+              {site.company.email}
+            </a>
+
+          </li>
+
+
+          <li>
+            {site.company.address}
+          </li>
+
+
+          <li>
+            {site.company.city}
+          </li>
+
+        </ul>
+
+      </address>
+
+    </section>
+
+    <section class="footer-contact footer-admin">
+      <h2>Portail</h2>
+      <a href="/admin/">Accès administration</a>
+    </section>
+
+  </div>
+
+
+  <div class="footer-bottom">
+
+    <div class="container">
+
+      <p>
+        © {new Date().getFullYear()}
+        {site.company.name}
+        — {footer.copyright.text}
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>

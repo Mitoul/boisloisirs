@@ -1,0 +1,17 @@
+.section-title {
+  text-align: center;
+  margin-bottom: var(--space-15);
+}
+
+.section-title h2 {
+  font-size: var(--font-size-section-title);
+  color: var(--color-dark);
+  margin-bottom: var(--space-5);
+}
+
+.section-title p {
+  max-width: 700px;
+  margin: auto;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}

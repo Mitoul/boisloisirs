@@ -1,0 +1,292 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: var(--color-background);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.top-bar {
+  background: var(--color-dark-alt);
+  color: var(--color-light);
+
+  font-size: var(--font-size-sm);
+}
+
+.top-bar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 42px;
+}
+
+.top-bar-link {
+  color: var(--color-light);
+
+  text-decoration: none;
+
+  font-weight: var(--font-weight-medium);
+}
+
+.navbar {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+
+  align-items: center;
+
+  gap: var(--space-10);
+
+  min-height: 96px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: auto;
+  height: 78px;
+
+  display: block;
+}
+
+.logo-text {
+  color: var(--color-dark-alt);
+
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.main-navigation {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  display: flex;
+
+  gap: var(--space-10);
+
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  color: var(--color-dark-alt);
+
+  text-decoration: none;
+
+  font-weight: var(--font-weight-semibold);
+
+  transition: var(--transition-base);
+}
+
+.nav-link:hover {
+  color: var(--color-primary-action);
+}
+
+.header-cta {
+  background: var(--color-primary-action);
+  color: var(--color-light);
+
+  padding: 14px var(--space-6);
+
+  border-radius: var(--radius-md);
+
+  font-weight: var(--font-weight-bold);
+
+  text-decoration: none;
+
+  transition: var(--transition-base);
+}
+
+.header-cta:hover {
+  transform: translateY(-2px);
+
+  box-shadow: var(--shadow-button);
+}
+
+
+/* =========================================
+   HAMBURGER
+   ========================================= */
+
+.menu-toggle {
+  display: none;
+
+  border: none;
+
+  background: none;
+
+  font-size: 2rem;
+
+  cursor: pointer;
+
+  color: var(--color-dark-alt);
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 900px) {
+
+  .top-bar-content {
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: var(--space-1);
+
+    height: auto;
+
+    padding: var(--space-3) 0;
+  }
+
+  .navbar {
+    grid-template-columns: 1fr auto;
+
+    min-height: 80px;
+
+    gap: var(--space-5);
+  }
+
+  .logo {
+    justify-self: start;
+  }
+
+  .logo img {
+    height: 64px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  .main-navigation {
+    display: none;
+
+    grid-column: 1 / -1;
+
+    width: 100%;
+
+    margin-top: var(--space-3);
+  }
+
+  .main-navigation.open {
+    display: block;
+
+    animation: menuFade 0.25s ease;
+  }
+
+  .nav-list {
+    flex-direction: column;
+
+    gap: 0;
+
+    background: var(--color-background);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-lg);
+
+    overflow: hidden;
+  }
+
+  .nav-link {
+    display: block;
+
+    padding: 18px var(--space-6);
+
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .nav-link:hover {
+    background: var(--color-surface-light);
+  }
+}
+
+
+/* =========================================
+   MENU ANIMATION
+   ========================================= */
+
+@keyframes menuFade {
+
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* =========================================
+   ACCESSIBILITY / KEYBOARD FOCUS
+   ========================================= */
+
+.menu-toggle:focus-visible,
+.nav-link:focus-visible,
+.header-cta:focus-visible,
+.top-bar-link:focus-visible,
+.logo:focus-visible {
+  outline: 3px solid var(--color-primary-action);
+  outline-offset: 4px;
+}
+/* =========================================
+   PRODUCTS DROPDOWN
+   ========================================= */
+.nav-item { position: relative; }
+.nav-products-trigger { border: 0; background: transparent; font-family: inherit; font-size: inherit; font-weight: var(--font-weight-semibold); line-height: inherit; cursor: pointer; padding: 0; }
+.nav-products-trigger span { margin-left: 5px; font-size: .85em; }
+.products-menu {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 310px;
+  padding: 10px;
+  background: var(--color-light);
+  border: 1px solid var(--color-border-light);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xl);
+}
+.products-menu[hidden] { display: none; }
+.products-menu::before { content:""; position:absolute; top:-7px; left:50%; width:12px; height:12px; background:#fff; border-left:1px solid var(--color-border-light); border-top:1px solid var(--color-border-light); transform:translateX(-50%) rotate(45deg); }
+.products-menu a { display:grid; gap:4px; padding:15px; border-radius:10px; color:var(--color-dark-alt); text-decoration:none; }
+.products-menu a:hover { background:var(--color-surface-green); }
+.products-menu strong { font-size:.98rem; }
+.products-menu span { color:var(--color-text-muted); font-size:.84rem; line-height:1.4; }
+
+@media (max-width: 900px) {
+  .nav-item-products { width:100%; }
+  .nav-products-trigger { width:100%; text-align:left; padding:18px var(--space-6); display:flex; justify-content:space-between; border-bottom:1px solid var(--color-border-light); }
+  .products-menu { position:static; transform:none; width:auto; margin:0; padding:8px 10px; border:0; border-radius:0; box-shadow:none; background:var(--color-surface-light); }
+  .products-menu::before { display:none; }
+  .products-menu a { padding:13px 14px; }
+}
+
+/* Keep the Products dropdown connected to its trigger so the pointer can travel into it. */
+.nav-item-products { padding-bottom: 10px; margin-bottom: -10px; }
+.products-menu { top: calc(100% + 8px); }
+.nav-item-products:hover .nav-products-trigger,
+.nav-products-trigger[aria-expanded="true"] { color: var(--color-primary-action); }
+
+@media (max-width: 900px) {
+  .nav-item-products { padding-bottom: 0; margin-bottom: 0; }
+}

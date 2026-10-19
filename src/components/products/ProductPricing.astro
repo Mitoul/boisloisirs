@@ -1,0 +1,34 @@
+---
+import Button from "../ui/Button.astro";
+import { woodProduct } from "../../content/wood";
+---
+
+<section id="tarifs" class="product-pricing">
+  <div class="container">
+    <div class="product-pricing-heading">
+      <div>
+        <span>Tarifs</span>
+        <h2>Un prix simple, selon la quantité</h2>
+      </div>
+      <p>Tarifs actuels affichés pour le bois de chauffage. Les frais de transport dépendent de la région de livraison.</p>
+    </div>
+
+    <div class="pricing-grid">
+      {woodProduct.pricing.map((item, index) => (
+        <article class:list={["price-card", index === 1 && "price-card--featured"]}>
+          {index === 1 && <span class="price-card-label">À partir de</span>}
+          <span class="price-card-quantity">{item.quantity}</span>
+          <div class="price-card-value">
+            <strong id={index === 0 ? "wood-price-small" : "wood-price-large"}>{item.price}</strong>
+            <span>{item.unit}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="pricing-footer">
+      <p>Vous connaissez votre quantité et votre lieu de livraison ?</p>
+      <Button href="/contact/?type=devis">Demander mon devis</Button>
+    </div>
+  </div>
+</section>

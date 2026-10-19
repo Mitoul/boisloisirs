@@ -1,0 +1,33 @@
+---
+import Button from "../ui/Button.astro";
+import { cta } from "../../content/cta";
+---
+
+<section id="contact-intro" class="cta">
+
+  <div class="container">
+
+    <div class="cta-box">
+
+      <h2>
+        {cta.title}
+      </h2>
+
+      <p>
+        {cta.description}
+      </p>
+
+      <div class="cta-actions">
+
+        <Button href={cta.button.href}>
+          {cta.button.label}
+        </Button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</section>

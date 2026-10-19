@@ -1,0 +1,23 @@
+---
+import { woodProduct } from "../../content/wood";
+---
+
+<section class="product-essences">
+  <div class="container">
+    <div class="product-section-heading">
+      <span>Notre sélection</span>
+      <h2>Des essences adaptées au chauffage</h2>
+      <p>Nous proposons plusieurs essences de bois. La disponibilité peut varier selon les approvisionnements.</p>
+    </div>
+
+    <div class="essences-grid">
+      {woodProduct.essences.map((essence, index) => (
+        <article class="essence-card">
+          <span class="essence-number">0{index + 1}</span>
+          <h3>{essence.name}</h3>
+          <p>{essence.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

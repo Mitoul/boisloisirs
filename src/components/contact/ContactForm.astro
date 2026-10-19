@@ -1,0 +1,212 @@
+---
+import { services } from "../../content/services";
+import { site } from "../../data/site";
+
+interface Props {
+  defaultRequestType?: "commande" | "devis";
+}
+
+const { defaultRequestType = "commande" } = Astro.props;
+const serviceOptions = services.items
+  .filter((item) => item.href?.startsWith("/contact/?type=devis"))
+  .map((item) => item.title);
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
+const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || "";
+---
+<section id="contact" class="contact-section">
+  <div class="container contact-grid">
+    <div class="contact-intro">
+      <p class="eyebrow">Contact & commandes</p>
+      <h2>Une commande ou une demande de devis&nbsp;?</h2>
+      <p>
+        Indiquez-nous ce dont vous avez besoin. Pour le bois et les pellets,
+        précisez la quantité souhaitée et votre adresse de livraison afin que
+        nous puissions vous répondre avec les conditions adaptées.
+      </p>
+      <div class="contact-points">
+        <a href={`tel:${site.company.phone}`}>📞 {site.company.phone}</a>
+        <a href={`mailto:${site.company.email}`}>✉ {site.company.email}</a>
+      </div>
+    </div>
+
+    <form class="contact-form" id="contact-form">
+      <div class="form-choice" role="group" aria-label="Type de demande">
+        <label class="choice-card">
+          <input type="radio" name="request_type" value="commande" checked={defaultRequestType === "commande"} />
+          <span>Passer une commande</span>
+        </label>
+        <label class="choice-card">
+          <input type="radio" name="request_type" value="devis" checked={defaultRequestType === "devis"} />
+          <span>Demander un devis</span>
+        </label>
+      </div>
+
+      <div class="form-grid">
+        <label>Nom *<input name="last_name" autocomplete="family-name" required /></label>
+        <label>Prénom *<input name="first_name" autocomplete="given-name" required /></label>
+        <label>Email *<input type="email" name="email" autocomplete="email" required /></label>
+        <label>Téléphone *<input type="tel" name="phone" autocomplete="tel" required /></label>
+        <label>Adresse *<input name="address" autocomplete="street-address" required /></label>
+        <label>Code postal *<input name="postal_code" inputmode="numeric" autocomplete="postal-code" required /></label>
+        <label>Ville *<input name="city" autocomplete="address-level2" required /></label>
+        <label>Produit / service *
+          <select name="product" id="contact-product" required></select>
+        </label>
+        <label class="quantity-field">Quantité souhaitée
+          <input name="quantity" id="contact-quantity" placeholder="Ex. 3 stères ou 2 palettes" />
+        </label>
+        <label class="full">Message *
+          <textarea name="message" rows="5" required placeholder="Décrivez votre demande, votre accès de livraison ou toute information utile."></textarea>
+        </label>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" name="consent" required />
+        <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande.</span>
+      </label>
+
+      <button class="form-submit" type="submit">Envoyer ma demande</button>
+      <p class="form-status" id="contact-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<script define:vars={{ supabaseUrl, supabaseKey, contactEmailFunction, defaultRequestType, serviceOptions }}>
+  const form = document.querySelector('#contact-form');
+  const status = document.querySelector('#contact-status');
+  const productSelect = document.querySelector('#contact-product');
+  const quantityField = document.querySelector('#contact-quantity');
+  const choices = document.querySelectorAll('input[name="request_type"]');
+
+  // Le formulaire peut être ouvert depuis n'importe quelle page avec
+  // /contact/?type=devis ou /contact/?type=commande. On relit l'URL côté
+  // navigateur afin que le bon choix reste actif même après une navigation.
+  const urlRequestType = new URLSearchParams(window.location.search).get('type');
+  const initialType = urlRequestType === 'devis' || urlRequestType === 'commande'
+    ? urlRequestType
+    : defaultRequestType;
+
+  const commandOptions = [
+    { value: 'bois', label: 'Bois de chauffage' },
+    { value: 'pellets', label: 'Pellets' },
+  ];
+
+  const quoteOptions = serviceOptions.map((label) => ({
+    value: `service:${label}`,
+    label,
+  }));
+
+  function updateProductOptions(type) {
+    if (!(productSelect instanceof HTMLSelectElement)) return;
+    const options = type === 'devis' ? quoteOptions : commandOptions;
+    productSelect.innerHTML = [
+      '<option value="" selected disabled>Sélectionnez une option</option>',
+      ...options.map((option) => `<option value="${escapeAttribute(option.value)}">${escapeHtml(option.label)}</option>`),
+    ].join('');
+    if (quantityField instanceof HTMLInputElement) {
+      quantityField.placeholder = type === 'devis'
+        ? 'Ex. surface, dimensions ou quantité concernée'
+        : 'Ex. 3 stères ou 2 palettes';
+      quantityField.required = type === 'commande';
+    }
+  }
+
+  choices.forEach((choice) => {
+    choice.addEventListener('change', () => {
+      if (choice instanceof HTMLInputElement && choice.checked) updateProductOptions(choice.value);
+    });
+  });
+
+  choices.forEach((choice) => {
+    if (choice instanceof HTMLInputElement) {
+      choice.checked = choice.value === initialType;
+    }
+  });
+  updateProductOptions(initialType);
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !(status instanceof HTMLElement)) return;
+
+    const submit = form.querySelector('button[type="submit"]');
+    if (submit instanceof HTMLButtonElement) submit.disabled = true;
+    status.className = 'form-status is-loading';
+    status.textContent = 'Envoi en cours…';
+
+    const raw = Object.fromEntries(new FormData(form).entries());
+    const requestType = String(raw.request_type || 'commande');
+    const rawProduct = String(raw.product || '');
+    const product = rawProduct.startsWith('service:') ? 'service' : rawProduct;
+    const service = rawProduct.startsWith('service:') ? rawProduct.replace('service:', '') : null;
+    const data = {
+      request_type: requestType,
+      last_name: String(raw.last_name || ''),
+      first_name: String(raw.first_name || ''),
+      email: String(raw.email || ''),
+      phone: String(raw.phone || ''),
+      address: String(raw.address || ''),
+      postal_code: String(raw.postal_code || ''),
+      city: String(raw.city || ''),
+      product,
+      service,
+      quantity: String(raw.quantity || ''),
+      message: String(raw.message || ''),
+    };
+
+    try {
+      if (!supabaseUrl || !supabaseKey) throw new Error('not_configured');
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/contact_requests`, {
+        method: 'POST',
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error('request_failed');
+      const saved = await response.json();
+
+      if (contactEmailFunction) {
+        const emailResponse = await fetch(contactEmailFunction, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: supabaseKey,
+            Authorization: `Bearer ${supabaseKey}`,
+          },
+          body: JSON.stringify({ request: saved?.[0] || data }),
+        });
+        if (!emailResponse.ok) console.warn('La demande est enregistrée, mais la notification email a échoué.');
+      }
+
+      form.reset();
+      const nextType = initialType;
+      const nextChoice = form.querySelector(`input[name="request_type"][value="${nextType}"]`);
+      if (nextChoice instanceof HTMLInputElement) nextChoice.checked = true;
+      updateProductOptions(nextType);
+      status.className = 'form-status is-success';
+      status.textContent = 'Merci. Votre demande a bien été envoyée.';
+    } catch (error) {
+      console.error(error);
+      status.className = 'form-status is-error';
+      status.textContent = 'Impossible d’envoyer la demande pour le moment. Vous pouvez nous appeler directement au ' + sitePhone;
+    } finally {
+      if (submit instanceof HTMLButtonElement) submit.disabled = false;
+    }
+  });
+
+  const sitePhone = '+32 472 50 60 11';
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+  }
+  function escapeAttribute(value) {
+    return escapeHtml(value).replace(/`/g, '&#96;');
+  }
+</script>

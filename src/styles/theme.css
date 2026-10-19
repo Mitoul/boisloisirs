@@ -1,0 +1,194 @@
+:root {
+
+  /* =========================================
+     BRAND COLORS
+     ========================================= */
+
+  --color-primary: #008716;
+  --color-primary-dark: #006b12;
+  --color-primary-action: #008716;
+
+  --color-primary-soft: #edf7ef;
+  --color-primary-overlay: rgba(0, 135, 22, 0.12);
+
+  --color-primary-light: #35a747;
+
+
+  /* =========================================
+     NATURAL / WOOD
+     ========================================= */
+
+  --color-wood: #8b5e34;
+  --color-wood-light: #c49a6c;
+  --color-wood-soft: #f5eee6;
+
+
+  /* =========================================
+     ACCENT
+     ========================================= */
+
+  --color-secondary: #d89b2b;
+
+
+  /* =========================================
+     DARK
+     ========================================= */
+
+  --color-dark: #1d1d1b;
+  --color-dark-alt: #292927;
+  --color-dark-surface: #353532;
+
+  --color-dark-gradient-start: #292927;
+  --color-dark-gradient-end: #1d1d1b;
+
+
+  /* =========================================
+     LIGHT
+     ========================================= */
+
+  --color-light: #ffffff;
+
+  --color-light-muted:
+    rgba(255, 255, 255, 0.82);
+
+  --color-light-subtle:
+    rgba(255, 255, 255, 0.08);
+
+  --color-light-border:
+    rgba(0, 0, 0, 0.08);
+
+
+  /* =========================================
+     BACKGROUNDS
+     ========================================= */
+
+  --color-background: #ffffff;
+
+  --color-surface: #f6f7f4;
+
+  --color-surface-light: #fbfcfa;
+
+  --color-surface-green: #f1f8f2;
+
+  --color-surface-wood: #faf5ef;
+
+
+  /* =========================================
+     TEXT
+     ========================================= */
+
+  --color-text: #292927;
+
+  --color-text-muted: #626260;
+
+  --color-text-light: #858580;
+
+
+  /* =========================================
+     BORDERS
+     ========================================= */
+
+  --color-border: #e2e4df;
+
+  --color-border-light: #edf0eb;
+
+
+  /* =========================================
+     FOOTER
+     ========================================= */
+
+  --color-footer-text: #d0d0cb;
+
+  --color-footer-text-muted: #a9a9a4;
+
+
+  /* =========================================
+     TYPOGRAPHY
+     ========================================= */
+
+  --font-family-base: "Poppins", sans-serif;
+  --font-family-heading: "Poppins", sans-serif;
+
+  --font-size-base: 1rem;
+  --font-size-sm: 0.9rem;
+  --font-size-lg: 1.1rem;
+  --font-size-section-title: 2.8rem;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-base: 1.6;
+
+
+  /* =========================================
+     SPACING
+     ========================================= */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-15: 60px;
+  --space-17: 70px;
+  --space-20: 80px;
+  --space-22: 90px;
+
+
+  /* =========================================
+     LAYOUT
+     ========================================= */
+
+  --container-max-width: 1200px;
+  --container-padding: 20px;
+
+
+  /* =========================================
+     BORDER RADIUS
+     ========================================= */
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+
+
+  /* =========================================
+     SHADOWS
+     ========================================= */
+
+  --shadow-sm:
+    0 5px 25px rgba(0, 0, 0, 0.06);
+
+  --shadow-md:
+    0 10px 25px rgba(0, 0, 0, 0.07);
+
+  --shadow-card:
+    0 8px 25px rgba(0, 0, 0, 0.05);
+
+  --shadow-card-hover:
+    0 20px 45px rgba(0, 0, 0, 0.10);
+
+  --shadow-lg:
+    0 15px 40px rgba(0, 0, 0, 0.07);
+
+  --shadow-xl:
+    0 18px 40px rgba(0, 0, 0, 0.08);
+
+  --shadow-2xl:
+    0 30px 60px rgba(0, 0, 0, 0.18);
+
+  --shadow-button:
+    0 8px 20px rgba(0, 135, 22, 0.25);
+
+
+  /* =========================================
+     TRANSITIONS
+     ========================================= */
+
+  --transition-base: 0.25s ease;
+}

@@ -1,0 +1,56 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+
+import { services } from "../../content/services";
+---
+
+<section id="services" class="services">
+
+  <div class="container">
+
+    <SectionTitle
+      title={services.title}
+      subtitle={services.subtitle}
+    />
+
+    <div class="services-grid">
+
+      {
+        services.items.map((service) => (
+
+          <article class="service-card">
+
+            {service.image && (
+              <div class="service-image">
+                <img src={service.image} alt={service.title} loading="lazy" />
+              </div>
+            )}
+
+            <div class="service-icon">
+              {service.icon}
+            </div>
+
+            <h3>
+              {service.title}
+            </h3>
+
+            <p>
+              {service.description}
+            </p>
+
+            {service.href && (
+              <a class="service-link" href={service.href}>
+                {service.label || "En savoir plus"} <span aria-hidden="true">→</span>
+              </a>
+            )}
+
+          </article>
+
+        ))
+      }
+
+    </div>
+
+  </div>
+
+</section>

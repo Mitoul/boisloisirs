@@ -1,0 +1,106 @@
+.why-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--space-15);
+  align-items: stretch;
+}
+
+.why-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.why-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.why-item > span {
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary-action);
+  color: var(--color-light);
+
+  font-weight: var(--font-weight-bold);
+}
+
+.why-item h3 {
+  margin-bottom: var(--space-2);
+
+  color: var(--color-dark);
+
+  font-size: 1.2rem;
+}
+
+.why-item p {
+  color: var(--color-text-light);
+  line-height: var(--line-height-base);
+}
+
+.why-card {
+  padding: var(--space-10);
+
+  background: var(--color-dark-alt);
+  color: var(--color-light);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
+}
+
+.why-card h3 {
+  margin-bottom: var(--space-5);
+
+  color: var(--color-light);
+
+  font-size: 1.5rem;
+}
+
+.why-card p {
+  margin-bottom: var(--space-6);
+
+  color: var(--color-footer-text-muted);
+}
+
+.why-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.why-card li {
+  color: var(--color-light);
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 900px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+}
+
+@media (max-width: 600px) {
+  .why-item {
+    gap: var(--space-4);
+  }
+
+  .why-card {
+    padding: var(--space-8);
+  }
+}

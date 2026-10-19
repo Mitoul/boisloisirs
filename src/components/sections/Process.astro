@@ -1,0 +1,44 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+
+import { process } from "../../content/process";
+---
+
+<section id="process" class="process">
+
+  <div class="container">
+
+    <SectionTitle
+      title={process.title}
+      subtitle={process.subtitle}
+    />
+
+    <div class="process-grid">
+
+      {
+        process.steps.map((step) => (
+
+          <article class="process-card">
+
+            <span class="process-number">
+              {step.number}
+            </span>
+
+            <h3>
+              {step.title}
+            </h3>
+
+            <p>
+              {step.text}
+            </p>
+
+          </article>
+
+        ))
+      }
+
+    </div>
+
+  </div>
+
+</section>

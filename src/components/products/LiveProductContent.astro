@@ -1,0 +1,35 @@
+---
+interface Props {
+  product: 'wood' | 'pellets';
+  priceSmallId?: string;
+  priceLargeId?: string;
+  imageId?: string;
+}
+const { product, priceSmallId, priceLargeId, imageId } = Astro.props;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
+---
+<script define:vars={{ product, priceSmallId, priceLargeId, imageId, supabaseUrl, supabaseKey }}>
+  const url = supabaseUrl;
+  const key = supabaseKey;
+  if (url && key) {
+    fetch(`${url}/rest/v1/site_settings?id=eq.1&select=wood_price_small,wood_price_large`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    }).then((r) => r.ok ? r.json() : []).then((rows) => {
+      const settings = rows?.[0];
+      if (!settings || product !== 'wood') return;
+      const small = document.getElementById(priceSmallId);
+      const large = document.getElementById(priceLargeId);
+      if (small) small.textContent = `${settings.wood_price_small} €`;
+      if (large) large.textContent = `${settings.wood_price_large} €`;
+    }).catch(() => {});
+
+    fetch(`${url}/rest/v1/site_media?product=eq.${product}&select=slot,url`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    }).then((r) => r.ok ? r.json() : []).then((rows) => {
+      const item = rows?.find((row) => row.slot === `${product}-hero`);
+      const image = imageId ? document.getElementById(imageId) : null;
+      if (item && image instanceof HTMLImageElement) image.src = item.url;
+    }).catch(() => {});
+  }
+</script>

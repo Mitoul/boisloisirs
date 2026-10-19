@@ -1,0 +1,43 @@
+---
+import Button from "../ui/Button.astro";
+import { woodProduct } from "../../content/wood";
+---
+
+<section class="product-hero">
+  <div class="container product-hero-grid">
+    <div class="product-hero-copy">
+      <nav class="product-breadcrumb" aria-label="Fil d’Ariane">
+        <a href="/">Accueil</a>
+        <span aria-hidden="true">/</span>
+        <a href="/">Produits</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Bois de chauffage</span>
+      </nav>
+
+      <span class="product-eyebrow">{woodProduct.eyebrow}</span>
+
+      <h1>{woodProduct.title}</h1>
+
+      <p class="product-hero-description">{woodProduct.description}</p>
+
+      <ul class="product-highlights" aria-label="Caractéristiques du bois">
+        {woodProduct.highlights.map((highlight) => (
+          <li><span aria-hidden="true">✓</span>{highlight}</li>
+        ))}
+      </ul>
+
+      <div class="product-hero-actions">
+        <Button href="/contact/?type=devis">Demander un devis</Button>
+        <Button href="#tarifs" variant="secondary">Voir les tarifs</Button>
+      </div>
+    </div>
+
+    <div class="product-hero-media">
+      <img id="wood-hero-image" src={woodProduct.image.src} alt={woodProduct.image.alt} loading="eager" fetchpriority="high" />
+      <div class="product-hero-badge">
+        <strong>&lt; 20 %</strong>
+        <span>d'humidité</span>
+      </div>
+    </div>
+  </div>
+</section>

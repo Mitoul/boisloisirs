@@ -1,0 +1,66 @@
+---
+import SectionTitle from "../ui/SectionTitle.astro";
+
+import { gallery } from "../../content/gallery";
+import { galleryImages } from "../../content/galleryImages";
+---
+
+{
+  gallery.enabled && (
+    <section id="gallery" class="gallery">
+
+      <div class="container">
+
+        <SectionTitle
+          title={gallery.title}
+          subtitle={gallery.subtitle}
+        />
+
+        <div class="gallery-grid">
+
+          {
+            gallery.items.map((item) => {
+              const image = galleryImages[item.image];
+
+              return (
+                <article class="gallery-card">
+
+                  <div class="gallery-image">
+
+                    {
+                      image && (
+                        <img
+                          src={image}
+                          alt={item.alt}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )
+                    }
+
+                  </div>
+
+                  <div class="gallery-content">
+
+                    <span>
+                      {item.category}
+                    </span>
+
+                    <h3>
+                      {item.title}
+                    </h3>
+
+                  </div>
+
+                </article>
+              );
+            })
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+  )
+}

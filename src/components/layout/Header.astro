@@ -1,0 +1,135 @@
+---
+import { site } from "../../data/site";
+import { navigation } from "../../data/navigation";
+import { sections } from "../../data/sections";
+import Logo from "./Logo.astro";
+
+const visibleNavigation = navigation.filter(
+  (item) => !item.section || sections[item.section] !== false
+);
+---
+
+<header class="site-header">
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href={`tel:${site.company.phone}`} class="top-bar-link">📞 {site.company.phone}</a>
+      <a href={`mailto:${site.company.email}`} class="top-bar-link">✉ {site.company.email}</a>
+    </div>
+  </div>
+
+  <div class="container navbar">
+    <Logo width={180} />
+
+    <button
+      class="menu-toggle"
+      id="menu-toggle"
+      type="button"
+      aria-label="Ouvrir le menu"
+      aria-expanded="false"
+      aria-controls="main-navigation"
+    >☰</button>
+
+    <nav id="main-navigation" class="main-navigation" aria-label="Navigation principale">
+      <ul class="nav-list">
+        {visibleNavigation.map((item) => (
+          item.label === "Produits" ? (
+            <li class="nav-item nav-item-products">
+              <button class="nav-link nav-products-trigger" type="button" aria-expanded="false" aria-controls="products-menu">
+                Produits <span aria-hidden="true">⌄</span>
+              </button>
+              <div id="products-menu" class="products-menu" hidden>
+                <a href="/produits/bois/">
+                  <strong>Bois de chauffage</strong>
+                  <span>Bois sec en vrac, plusieurs essences</span>
+                </a>
+                <a href="/produits/pellets/">
+                  <strong>Pellets</strong>
+                  <span>Comfo Pellets DIN+ en palettes</span>
+                </a>
+              </div>
+            </li>
+          ) : (
+            <li class="nav-item">
+              <a href={item.href} class="nav-link">{item.label}</a>
+            </li>
+          )
+        ))}
+      </ul>
+    </nav>
+
+    <a href={site.header.cta.href} class="header-cta">{site.header.cta.label}</a>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.querySelector("#menu-toggle");
+  const navigation = document.querySelector("#main-navigation");
+  const navLinks = document.querySelectorAll(".nav-link:not(.nav-products-trigger)");
+  const productsTrigger = document.querySelector(".nav-products-trigger");
+  const productsMenu = document.querySelector("#products-menu");
+
+  const closeProducts = () => {
+    if (!productsTrigger || !productsMenu) return;
+    productsMenu.hidden = true;
+    productsTrigger.setAttribute("aria-expanded", "false");
+  };
+
+  const toggleProducts = () => {
+    if (!productsTrigger || !productsMenu) return;
+    const open = productsTrigger.getAttribute("aria-expanded") === "true";
+    productsMenu.hidden = open;
+    productsTrigger.setAttribute("aria-expanded", String(!open));
+  };
+
+  productsTrigger?.addEventListener("click", toggleProducts);
+
+  document.querySelector(".nav-item-products")?.addEventListener("mouseenter", () => {
+    if (window.innerWidth > 900 && productsMenu && productsTrigger) {
+      productsMenu.hidden = false;
+      productsTrigger.setAttribute("aria-expanded", "true");
+    }
+  });
+
+  const closeMenu = () => {
+    navigation?.classList.remove("open");
+    menuToggle?.setAttribute("aria-expanded", "false");
+    menuToggle?.setAttribute("aria-label", "Ouvrir le menu");
+    closeProducts();
+  };
+
+  menuToggle?.addEventListener("click", () => {
+    const isOpen = navigation?.classList.contains("open") ?? false;
+    if (isOpen) closeMenu();
+    else {
+      navigation?.classList.add("open");
+      menuToggle?.setAttribute("aria-expanded", "true");
+      menuToggle?.setAttribute("aria-label", "Fermer le menu");
+    }
+  });
+
+  navLinks.forEach((link) => link.addEventListener("click", closeMenu));
+  productsMenu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+  document.addEventListener("click", (event) => {
+    if (window.innerWidth <= 900) return;
+    const target = event.target;
+    if (target instanceof Node && !document.querySelector(".nav-item-products")?.contains(target)) closeProducts();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeProducts();
+      if (navigation?.classList.contains("open")) {
+        closeMenu();
+        menuToggle?.focus();
+      }
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      navigation?.classList.remove("open");
+      menuToggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>

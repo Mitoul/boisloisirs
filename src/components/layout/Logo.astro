@@ -1,0 +1,41 @@
+---
+import { site } from "../../data/site";
+
+interface Props {
+  href?: string;
+  class?: string;
+  width?: number;
+}
+
+const {
+  href = "/",
+  class: className = "",
+  width = 180
+} = Astro.props;
+
+const logoAlt =
+  site.logo.alt || `${site.company.name} - Logo`;
+---
+
+<a
+  href={href}
+  class={`logo ${className}`}
+  aria-label={`Retour à l'accueil de ${site.company.name}`}
+>
+
+  {
+    site.logo.src ? (
+      <img
+        src={site.logo.src}
+        alt={logoAlt}
+        width={width}
+        height={60}
+      />
+    ) : (
+      <span class="logo-text">
+        {site.company.name}
+      </span>
+    )
+  }
+
+</a>

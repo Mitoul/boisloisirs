@@ -1,0 +1,312 @@
+---
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+
+import "../styles/global.css";
+
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = site.seo.title,
+  description = site.seo.description
+} = Astro.props;
+
+/*
+ * URL principale du site.
+ *
+ * En production, renseigner site.seo.url dans site.js.
+ * Astro.site reste un fallback utile si l'URL est définie
+ * dans astro.config.mjs.
+ */
+const siteUrl =
+  site.seo.url ||
+  Astro.site?.toString().replace(/\/$/, "") ||
+  "";
+
+const canonical = siteUrl
+  ? new URL(Astro.url.pathname, siteUrl).toString()
+  : undefined;
+
+
+/*
+ * Image Open Graph.
+ *
+ * On génère une URL absolue uniquement si une image
+ * est configurée.
+ */
+const ogImage =
+  site.seo.image && siteUrl
+    ? new URL(site.seo.image, siteUrl).toString()
+    : undefined;
+
+
+/*
+ * Réseaux sociaux.
+ *
+ * On retire les valeurs vides afin de ne jamais générer
+ * de sameAs avec une chaîne vide.
+ */
+const socialLinks = Object.values(site.social || {})
+  .filter(Boolean);
+
+
+/*
+ * Données structurées Schema.org.
+ */
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+
+  name: site.company.name,
+
+  description,
+
+  telephone: site.company.phone,
+
+  email: site.company.email,
+
+  url: siteUrl || undefined,
+
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.company.address,
+    postalCode: site.company.postalCode,
+    addressLocality: site.company.city,
+    addressRegion: site.company.province,
+    addressCountry: site.company.country
+  },
+
+  vatID: site.company.vat,
+
+  sameAs: socialLinks
+};
+---
+
+<!doctype html>
+
+<html lang={site.seo.locale || "fr-BE"}>
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <!-- =========================================
+       SEO
+       ========================================= -->
+
+  <title>{title}</title>
+
+  <meta
+    name="description"
+    content={description}
+  />
+
+  {
+    site.seo.keywords?.length > 0 && (
+      <meta
+        name="keywords"
+        content={site.seo.keywords.join(", ")}
+      />
+    )
+  }
+
+  {
+    site.seo.themeColor && (
+      <meta
+        name="theme-color"
+        content={site.seo.themeColor}
+      />
+    )
+  }
+
+
+  <!-- =========================================
+       CANONICAL
+       ========================================= -->
+
+  {
+    canonical && (
+      <link
+        rel="canonical"
+        href={canonical}
+      />
+    )
+  }
+
+
+  <!-- =========================================
+       OPEN GRAPH
+       ========================================= -->
+
+  <meta
+    property="og:type"
+    content={site.seo.type || "website"}
+  />
+
+  <meta
+    property="og:site_name"
+    content={site.seo.siteName || site.company.name}
+  />
+
+  <meta
+    property="og:title"
+    content={title}
+  />
+
+  <meta
+    property="og:description"
+    content={description}
+  />
+
+  <meta
+    property="og:locale"
+    content={site.seo.locale || "fr_BE"}
+  />
+
+  {
+    canonical && (
+      <meta
+        property="og:url"
+        content={canonical}
+      />
+    )
+  }
+
+  {
+    ogImage && (
+      <>
+        <meta
+          property="og:image"
+          content={ogImage}
+        />
+
+        <meta
+          property="og:image:alt"
+          content={`${site.company.name} - ${site.company.tagline}`}
+        />
+      </>
+    )
+  }
+
+
+  <!-- =========================================
+       TWITTER / SOCIAL
+       ========================================= -->
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+
+  <meta
+    name="twitter:title"
+    content={title}
+  />
+
+  <meta
+    name="twitter:description"
+    content={description}
+  />
+
+  {
+    ogImage && (
+      <meta
+        name="twitter:image"
+        content={ogImage}
+      />
+    )
+  }
+
+
+  <!-- =========================================
+       FAVICONS
+       ========================================= -->
+
+  <link
+    rel="icon"
+    href="/favicon.ico"
+  />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="32x32"
+    href="/favicon-32x32.png"
+  />
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="16x16"
+    href="/favicon-16x16.png"
+  />
+
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="/apple-touch-icon.png"
+  />
+
+  <link
+    rel="manifest"
+    href="/site.webmanifest"
+  />
+
+
+  <!-- =========================================
+       STRUCTURED DATA
+       ========================================= -->
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(schema)}
+  ></script>
+
+
+  <!-- =========================================
+       FONT
+       ========================================= -->
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+</head>
+
+<body>
+
+  <Header />
+
+  <main>
+
+    <slot />
+
+  </main>
+
+  <Footer />
+
+</body>
+
+</html>
