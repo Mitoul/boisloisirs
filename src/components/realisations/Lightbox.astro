@@ -1,0 +1,31 @@
+---
+---
+<dialog id="lightbox" class="lightbox" aria-label="Visionneuse photo">
+  <button class="lb-close" aria-label="Fermer" data-lb-close>×</button>
+  <button class="lb-prev" aria-label="Photo précédente" data-lb-prev>‹</button>
+  <figure><img alt="" /><figcaption></figcaption></figure>
+  <button class="lb-next" aria-label="Photo suivante" data-lb-next>›</button>
+</dialog>
+<script>
+  const dlg = document.getElementById("lightbox") as HTMLDialogElement;
+  const img = dlg.querySelector("img")!;
+  const cap = dlg.querySelector("figcaption")!;
+  let items: HTMLAnchorElement[] = [];
+  let i = 0;
+  const show = (n: number) => {
+    i = (n + items.length) % items.length;
+    img.src = items[i].href;
+    img.alt = items[i].dataset.alt || "";
+    cap.textContent = items[i].dataset.caption || "";
+  };
+  document.querySelectorAll<HTMLAnchorElement>("[data-lightbox]").forEach((a) => items.push(a));
+  items.forEach((a, n) => a.addEventListener("click", (e) => { e.preventDefault(); show(n); dlg.showModal(); }));
+  dlg.querySelector("[data-lb-close]")!.addEventListener("click", () => dlg.close());
+  dlg.querySelector("[data-lb-prev]")!.addEventListener("click", () => show(i - 1));
+  dlg.querySelector("[data-lb-next]")!.addEventListener("click", () => show(i + 1));
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") show(i - 1);
+    if (e.key === "ArrowRight") show(i + 1);
+  });
+</script>

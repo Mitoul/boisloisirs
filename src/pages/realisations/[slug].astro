@@ -1,0 +1,41 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Lightbox from "../../components/realisations/Lightbox.astro";
+import { chantiers, phases } from "../../content/chantiers";
+
+export function getStaticPaths() {
+  return chantiers.map((c) => ({ params: { slug: c.slug }, props: { chantier: c } }));
+}
+const { chantier } = Astro.props;
+const order = Object.keys(phases);
+const byPhase = order
+  .map((p) => ({ key: p, label: phases[p], photos: chantier.photos.filter((x) => x.phase === p) }))
+  .filter((g) => g.photos.length);
+---
+<Layout title={`${chantier.title} — Réalisations`} description={chantier.summary}>
+  <section class="gallery chantier">
+    <div class="container">
+      <p><a href="/realisations/">← Toutes les réalisations</a></p>
+      <span class="chantier-cat">{chantier.category}</span>
+      <h1>{chantier.title}</h1>
+      <p>{chantier.summary}</p>
+
+      <ol class="timeline">
+        {byPhase.map((g) => (
+          <li class="timeline-step">
+            <h2>{g.label}</h2>
+            <div class="timeline-photos">
+              {g.photos.map((p) => (
+                <a href={p.src} data-lightbox data-alt={p.alt} data-caption={`${g.label} — ${p.alt}`}>
+                  <img src={p.src} alt={p.alt} loading="lazy" decoding="async"
+                       onerror={`this.onerror=null;this.src='${p.fallback}';this.parentElement.href='${p.fallback}'`} />
+                </a>
+              ))}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <Lightbox />
+</Layout>

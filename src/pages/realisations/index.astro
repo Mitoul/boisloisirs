@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SectionTitle from "../../components/ui/SectionTitle.astro";
+import { chantiers } from "../../content/chantiers";
+---
+<Layout title="Nos réalisations — Bois, Aménagements & Loisirs" description="Suivez l'évolution de nos chantiers en photos : terrassement, nivellement, abattage, aménagements extérieurs en Brabant wallon.">
+  <section class="gallery">
+    <div class="container">
+      <SectionTitle title="Nos réalisations" subtitle="Suivez l'évolution de nos chantiers, de l'état initial au résultat final." />
+      <div class="gallery-grid">
+        {chantiers.map((c) => (
+          <a class="gallery-card" href={`/realisations/${c.slug}/`}>
+            <div class="gallery-image"><img src={c.cover} alt={c.title} loading="lazy" decoding="async" /></div>
+            <div class="gallery-content">
+              <span>{c.category}</span>
+              <h3>{c.title}</h3>
+              <p>{c.summary}</p>
+              <small>{c.photos.length} photo{c.photos.length > 1 ? "s" : ""}</small>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
