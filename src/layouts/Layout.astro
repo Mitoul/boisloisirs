@@ -32,6 +32,9 @@ const canonical = siteUrl
   ? new URL(Astro.url.pathname, siteUrl).toString()
   : undefined;
 
+const isProduction =
+  (import.meta.env.PUBLIC_SITE_ENV || "production") === "production";
+
 
 /*
  * Image Open Graph.
@@ -143,6 +146,15 @@ const schema = {
     )
   }
 
+
+  {
+    !isProduction && (
+      <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+      />
+    )
+  }
 
   <!-- =========================================
        OPEN GRAPH

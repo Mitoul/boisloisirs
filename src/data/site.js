@@ -50,7 +50,7 @@ export const site = {
       "Belgique"
     ],
 
-    url: "https://www.boisloisirs.be/",
+    url: import.meta.env.PUBLIC_SITE_URL || "https://www.boisloisirs.be/",
 
     image: "/og-image.jpg",
 
