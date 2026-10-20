@@ -1,8 +1,8 @@
 /*
- * Réalisations — chaque chantier a une chronologie de photos.
- * phase : "avant" | "pendant" | "apres"
- * Les fichiers vont dans public/realisations/<slug>/ (voir scripts/fetch-photos.sh).
- * Tant qu'une photo n'existe pas, on renvoie vers une image locale provisoire (fallback).
+ * Réalisations — photos dans public/realisations/<slug>/01.jpg, 02.jpg…
+ * 4 photos = chronologie (01 avant · 02-03 pendant · 04 après).
+ * 1 photo  = pas de phase (omettre "phase").
+ * Pour ajouter un chantier : copier les photos, ajouter un bloc ci-dessous.
  */
 export const phases = {
   avant: "Avant",
@@ -12,43 +12,75 @@ export const phases = {
 
 export const chantiers = [
   {
-    slug: "terrassement-piscine",
-    category: "Terrassement",
-    title: "Terrassement pour projet extérieur",
-    summary: "Préparation du terrain et excavation.",
-    cover: "/terrassement-accueil.jpg",
+    slug: "abattage-helecine",
+    category: "Abattage",
+    title: "Abattage à Hélécine",
+    summary: "Abattage d'un grand arbre en site arboré, avec câble de traction puis débitage du tronc.",
+    cover: "/realisations/abattage-helecine/01.jpg",
     photos: [
-      { phase: "avant", src: "/realisations/terrassement-piscine/avant-1.jpg", fallback: "/terrassement-accueil.jpg", alt: "Terrain avant terrassement" }
+      { phase: "avant", src: "/realisations/abattage-helecine/01.jpg", alt: "Arbres sur pied avant l'abattage" },
+      { phase: "pendant", src: "/realisations/abattage-helecine/02.jpg", alt: "Câble de traction fixé au tronc" },
+      { phase: "pendant", src: "/realisations/abattage-helecine/03.jpg", alt: "Tronc abattu et tronçonneuse" },
+      { phase: "apres", src: "/realisations/abattage-helecine/04.jpg", alt: "Rondins débités sur la pelouse" }
     ]
   },
   {
-    slug: "amenagement-terrasse",
-    category: "Aménagement extérieur",
-    title: "Terrasse et mise en lumière",
-    summary: "De la dalle à la terrasse terminée.",
-    cover: "/amenagement-accueil.jpg",
+    slug: "abattage-hetre",
+    category: "Abattage",
+    title: "Abattage d'un hêtre au bord d'un étang",
+    summary: "Évacuation et débitage d'un hêtre tombé au bord de l'eau.",
+    cover: "/realisations/abattage-hetre/01.jpg",
     photos: [
-      { phase: "avant", src: "/realisations/amenagement-terrasse/avant-1.jpg", fallback: "/amenagement-accueil.jpg", alt: "Terrain avant aménagement" }
+      { phase: "avant", src: "/realisations/abattage-hetre/01.jpg", alt: "Hêtre tombé au bord de l'étang" },
+      { phase: "pendant", src: "/realisations/abattage-hetre/02.jpg", alt: "Hêtre couché sur la rive" },
+      { phase: "pendant", src: "/realisations/abattage-hetre/03.jpg", alt: "Tronc débité en tronçons" },
+      { phase: "apres", src: "/realisations/abattage-hetre/04.jpg", alt: "Souche et branches sur la berge" }
+    ]
+  },
+  {
+    slug: "abattage-tempete",
+    category: "Abattage",
+    title: "Intervention après tempête",
+    summary: "Dégagement d'un arbre tombé près d'une habitation, avec le chargeur télescopique.",
+    cover: "/realisations/abattage-tempete/01.jpg",
+    photos: [
+      { phase: "avant", src: "/realisations/abattage-tempete/01.jpg", alt: "Arbre tombé contre la maison" },
+      { phase: "pendant", src: "/realisations/abattage-tempete/02.jpg", alt: "Arbre en cours de découpe" },
+      { phase: "pendant", src: "/realisations/abattage-tempete/03.jpg", alt: "Tronc tombé sur la pelouse" },
+      { phase: "apres", src: "/realisations/abattage-tempete/04.jpg", alt: "Chargeur télescopique dégageant le tronc" }
     ]
   },
   {
     slug: "nivellement-terrain",
     category: "Nivellement",
     title: "Nettoyage et nivellement de terrain",
-    summary: "Remise en état d'un terrain en friche.",
-    cover: "/nivellement-accueil.jpg",
+    summary: "Terrain en friche dessouché, nettoyé puis nivelé.",
+    cover: "/realisations/nivellement-terrain/01.jpg",
     photos: [
-      { phase: "apres", src: "/realisations/nivellement-terrain/apres-1.jpg", fallback: "/nivellement-accueil.jpg", alt: "Terrain nivelé" }
+      { phase: "avant", src: "/realisations/nivellement-terrain/01.jpg", alt: "Terrain en friche avant travaux" },
+      { phase: "pendant", src: "/realisations/nivellement-terrain/02.jpg", alt: "Dessouchage avec le chargeur" },
+      { phase: "pendant", src: "/realisations/nivellement-terrain/03.jpg", alt: "Terrain dégagé" },
+      { phase: "apres", src: "/realisations/nivellement-terrain/04.jpg", alt: "Terrain nivelé" }
     ]
   },
   {
-    slug: "abattage",
-    category: "Abattage",
-    title: "Abattage et préparation du bois",
-    summary: "Abattage, dessouchage, broyage.",
-    cover: "/abattage-accueil.jpg",
+    slug: "terrassement-piscine",
+    category: "Terrassement",
+    title: "Terrassement pour piscine, citerne…",
+    summary: "Travaux de terrassement réalisés par Bois Loisirs.",
+    cover: "/realisations/terrassement-piscine/01.jpg",
     photos: [
-      { phase: "pendant", src: "/realisations/abattage/pendant-1.jpg", fallback: "/abattage-accueil.jpg", alt: "Abattage d'un arbre" }
+      { src: "/realisations/terrassement-piscine/01.jpg", alt: "Travaux de terrassement" }
+    ]
+  },
+  {
+    slug: "amenagement-terrasse",
+    category: "Aménagement extérieur",
+    title: "Aménagements extérieurs",
+    summary: "Carport, dalle de béton, terrasse, palissades.",
+    cover: "/realisations/amenagement-terrasse/01.jpg",
+    photos: [
+      { src: "/realisations/amenagement-terrasse/01.jpg", alt: "Aménagement extérieur" }
     ]
   }
 ];

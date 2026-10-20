@@ -8,9 +8,12 @@ export function getStaticPaths() {
 }
 const { chantier } = Astro.props;
 const order = Object.keys(phases);
-const byPhase = order
-  .map((p) => ({ key: p, label: phases[p], photos: chantier.photos.filter((x) => x.phase === p) }))
-  .filter((g) => g.photos.length);
+const hasPhases = chantier.photos.some((x) => x.phase);
+const byPhase = hasPhases
+  ? order
+      .map((p) => ({ key: p, label: phases[p], photos: chantier.photos.filter((x) => x.phase === p) }))
+      .filter((g) => g.photos.length)
+  : [{ key: "all", label: "", photos: chantier.photos }];
 ---
 <Layout title={`${chantier.title} — Réalisations`} description={chantier.summary}>
   <section class="gallery chantier">
@@ -23,12 +26,11 @@ const byPhase = order
       <ol class="timeline">
         {byPhase.map((g) => (
           <li class="timeline-step">
-            <h2>{g.label}</h2>
+            {g.label && <h2>{g.label}</h2>}
             <div class="timeline-photos">
               {g.photos.map((p) => (
-                <a href={p.src} data-lightbox data-alt={p.alt} data-caption={`${g.label} — ${p.alt}`}>
-                  <img src={p.src} alt={p.alt} loading="lazy" decoding="async"
-                       onerror={`this.onerror=null;this.src='${p.fallback}';this.parentElement.href='${p.fallback}'`} />
+                <a href={p.src} data-lightbox data-alt={p.alt} data-caption={g.label ? `${g.label} — ${p.alt}` : p.alt}>
+                  <img src={p.src} alt={p.alt} loading="lazy" decoding="async" />
                 </a>
               ))}
             </div>

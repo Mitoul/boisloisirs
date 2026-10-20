@@ -15,7 +15,7 @@ import { chantiers } from "../../content/chantiers";
               <span>{c.category}</span>
               <h3>{c.title}</h3>
               <p>{c.summary}</p>
-              <small>{c.photos.length} photo{c.photos.length > 1 ? "s" : ""}</small>
+              {c.photos.length > 1 && <small>{c.photos.length} photos</small>}
             </div>
           </a>
         ))}
