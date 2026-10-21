@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./realisations-live.oTiu2fR_.js";var n=document.getElementById(`timeline-root`);e().then(e=>{let r=e?.find(e=>e.slug===n.dataset.slug);r&&(n.innerHTML=t(r),document.getElementById(`chantier-cat`).textContent=r.category,document.getElementById(`chantier-title`).textContent=r.title,document.getElementById(`chantier-summary`).textContent=r.summary)});

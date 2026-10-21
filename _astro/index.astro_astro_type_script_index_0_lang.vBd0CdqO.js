@@ -1,0 +1,1 @@
+import{n as e,t}from"./realisations-live.oTiu2fR_.js";var n=document.getElementById(`chantiers-grid`),r=(n.dataset.static||``).split(`,`);e().then(e=>{e&&(n.innerHTML=e.map(e=>t(e,r.includes(e.slug)?`/realisations/${e.slug}/`:`/realisations/voir/?s=${encodeURIComponent(e.slug)}`)).join(``))});

@@ -1,0 +1,12 @@
+var e=`sb_publishable_AG40W76h94VUlZtIPNhrIw_kUK5PQaJ`,t={avant:`Avant`,pendant:`Pendant les travaux`,apres:`Après`},n=[`avant`,`pendant`,`apres`];function r(e){return String(e??``).replace(/[&<>"']/g,e=>({"&":`&amp;`,"<":`&lt;`,">":`&gt;`,'"':`&quot;`,"'":`&#39;`})[e])}function i(e){let t=String(e??``);return t.startsWith(`/`)&&!t.startsWith(`//`)||t.startsWith(`https://`)?t:``}async function a(){try{let t=await fetch(`https://hpenakfcddvgmcvbdpgj.supabase.co/rest/v1/chantiers?select=slug,title,category,summary,featured,position,chantier_photos(url,alt,phase,position)&published=eq.true&order=position.asc,id.desc`,{headers:{apikey:e,Authorization:`Bearer ${e}`}});if(!t.ok)return null;let n=await t.json();if(!Array.isArray(n))return null;let r=n.map(e=>{let t=(e.chantier_photos||[]).filter(e=>i(e.url)).sort((e,t)=>e.position-t.position).map(t=>({src:t.url,alt:t.alt||e.title,phase:t.phase||void 0}));return{slug:e.slug,title:e.title,category:e.category,summary:e.summary,featured:e.featured,cover:t[0]?.src||``,photos:t}}).filter(e=>e.photos.length>0);return r.length?r:null}catch{return null}}function o(e,t,{showCount:n=!0,summary:a=!0}={}){return`<a class="gallery-card" href="${r(t)}">
+    <div class="gallery-image"><img src="${r(i(e.cover))}" alt="${r(e.title)}" loading="lazy" decoding="async" /></div>
+    <div class="gallery-content">
+      <span>${r(e.category)}</span>
+      <h2>${r(e.title)}</h2>
+      ${a&&e.summary?`<p>${r(e.summary)}</p>`:``}
+      ${n&&e.photos.length>1?`<small>${e.photos.length} photos</small>`:``}
+    </div>
+  </a>`}function s(e){return`<ol class="timeline">${(e.photos.some(e=>e.phase)?n.map(n=>({label:t[n],photos:e.photos.filter(e=>e.phase===n)})).concat([{label:``,photos:e.photos.filter(e=>!e.phase)}]).filter(e=>e.photos.length):[{label:``,photos:e.photos}]).map(e=>`<li class="timeline-step">
+    ${e.label?`<h2>${r(e.label)}</h2>`:``}
+    <div class="timeline-photos">${e.photos.map(t=>`<a href="${r(i(t.src))}" data-lightbox data-alt="${r(t.alt)}" data-caption="${r(e.label?`${e.label} — ${t.alt}`:t.alt)}"><img src="${r(i(t.src))}" alt="${r(t.alt)}" loading="lazy" decoding="async" /></a>`).join(``)}</div>
+  </li>`).join(``)}</ol>`}export{a as n,s as r,o as t};
