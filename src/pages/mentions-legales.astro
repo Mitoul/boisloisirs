@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+const c = site.company;
+const isProd = (import.meta.env.PUBLIC_SITE_ENV || "production") === "production";
+---
+<Layout title={`Mentions légales | ${c.name}`} description={`Mentions légales du site ${c.name}.`}>
+  <article class="legal">
+    <div class="container legal-inner">
+      {!isProd && <p class="legal-draft" role="note">Brouillon à faire valider par l’entreprise avant la mise en ligne.</p>}
+      <h1>Mentions légales</h1>
+
+      <h2>Éditeur du site</h2>
+      <p>
+        <strong>{c.name}</strong><br />
+        {c.address}, {c.postalCode} {c.city} ({c.province}), Belgique<br />
+        N° d’entreprise / TVA : {c.vat}<br />
+        Téléphone : <a href={`tel:${c.phone}`}>{c.phone}</a><br />
+        E-mail : <a href={`mailto:${c.email}`}>{c.email}</a>
+      </p>
+
+      <h2>Hébergement</h2>
+      <p>Hébergeur du site : <strong>[à compléter : nom et adresse de l’hébergeur]</strong>.</p>
+      <p>Les demandes envoyées via le formulaire de contact sont enregistrées chez Supabase (base de données) et notifiées par e-mail via Resend. Voir la <a href="/vie-privee/">politique de confidentialité</a>.</p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Le logo, les textes et les photographies présents sur ce site sont la propriété de {c.name} ou utilisés avec l’accord de leurs auteurs. Toute reproduction sans autorisation écrite préalable est interdite.</p>
+
+      <h2>Responsabilité</h2>
+      <p>Nous veillons à l’exactitude des informations publiées (prix, disponibilités, descriptions), mais elles peuvent évoluer. Les prix affichés sont indicatifs et confirmés lors de la commande ou du devis.</p>
+
+      <h2>Droit applicable</h2>
+      <p>Le présent site est soumis au droit belge. En cas de litige, les tribunaux belges sont compétents.</p>
+    </div>
+  </article>
+</Layout>

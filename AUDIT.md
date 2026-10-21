@@ -61,3 +61,20 @@ Après : **0 violation axe, 0 débordement, 0 image cassée** sur 8 pages × 4 t
 **Tests** : parcours complet rejoué avec un faux serveur Supabase (connexion, création, envoi de 2 photos, étapes, réordonnancement, publication, affichage public + visionneuse, suppression, échappement XSS) : 20/20. Non testé : le vrai Supabase (RLS, Storage) — à valider après exécution du SQL.
 
 **Limites connues** : un chantier d'origine (statique) retiré de la base reste visible sur son ancienne URL tant qu'il n'est pas retiré de `chantiers.js` ; les nouveaux chantiers ne sont pas dans le sitemap ; pas de réordonnancement des chantiers entre eux (les plus récents d'abord).
+
+## Itération 4 — formulaire de contact, conformité, déploiement
+**Corrigé**
+- **Formulaire : échec silencieux possible.** L'envoi demandait au serveur de renvoyer la ligne créée (`return=representation`), ce que les règles d'accès Supabase interdisent aux visiteurs → la demande pouvait être refusée. Remplacé par `return=minimal`.
+- **Formulaire : fausse erreur.** Si la notification e-mail échouait, le visiteur voyait « Impossible d'envoyer » alors que la demande était enregistrée (risque de doublons). L'envoi d'e-mail est maintenant isolé.
+- **Anti-spam :** champ piège invisible (`website`) ; contraintes de longueur / e-mail côté base (`supabase/contact-hardening.sql`, à exécuter une fois).
+- **Fonction d'e-mail** (`send-contact-email`) : elle acceptait n'importe quel contenu de n'importe qui → validation stricte des champs et origines autorisées (secret optionnel `ALLOWED_ORIGINS`). À redéployer avec `supabase functions deploy send-contact-email`.
+- **Pages légales** : `/mentions-legales/` et `/vie-privee/` (brouillon basé sur les données de l'entreprise), liens dans le pied de page et dans la case de consentement.
+- **Déploiement test :** `cname: test.boisloisirs.be` ajouté à l'action de publication (sinon le domaine personnalisé peut être perdu à chaque publication, la branche étant recréée).
+- Supprimé : composant `CalBooking` + CSS (inutilisés, lien Cal.com d'un autre projet), numéro de téléphone codé en dur dans le formulaire.
+
+**À valider avec l'entreprise avant la mise en ligne**
+- Mentions légales : **hébergeur à compléter** (marqué « [à compléter] »).
+- Vie privée : durée de conservation proposée = 24 mois (à confirmer), liste des sous-traitants (Supabase, Resend) à vérifier, relecture générale. Ces textes sont un brouillon, pas un avis juridique.
+- Un bandeau « brouillon » s'affiche tant que `PUBLIC_SITE_ENV` n'est pas `production`.
+
+**Tests** : QA Playwright + axe sur 12 pages × 4 tailles : 0 violation, 0 débordement ; contact : envoi humain OK (`return=minimal`), robot ignoré, e-mail en échec sans erreur visible ; admin : 20/20.

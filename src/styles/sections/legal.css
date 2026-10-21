@@ -1,0 +1,9 @@
+.legal { padding: var(--space-10, 4rem) 0; }
+.legal-inner { max-width: 760px; }
+.legal h1 { margin-bottom: 1.5rem; }
+.legal h2 { margin: 2rem 0 .5rem; font-size: 1.25rem; }
+.legal p { line-height: 1.7; margin: 0 0 1rem; }
+.legal a { color: var(--color-primary-action); text-decoration: underline; }
+.legal-draft { background: #fff4d6; border: 1px solid #e3c466; border-radius: var(--radius-md); padding: 12px 16px; color: #5a4300; font-weight: 600; }
+.footer-legal { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center; margin: 0 0 8px; padding: 0; list-style: none; }
+.footer-legal a { color: inherit; text-decoration: underline; }

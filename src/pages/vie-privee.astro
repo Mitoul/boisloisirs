@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+const c = site.company;
+const isProd = (import.meta.env.PUBLIC_SITE_ENV || "production") === "production";
+---
+<Layout title={`Politique de confidentialité | ${c.name}`} description={`Comment ${c.name} utilise les données saisies dans le formulaire de contact.`}>
+  <article class="legal">
+    <div class="container legal-inner">
+      {!isProd && <p class="legal-draft" role="note">Brouillon à faire valider par l’entreprise avant la mise en ligne.</p>}
+      <h1>Politique de confidentialité</h1>
+
+      <h2>Responsable du traitement</h2>
+      <p>{c.name}, {c.address}, {c.postalCode} {c.city}, Belgique — {c.vat}. Contact : <a href={`mailto:${c.email}`}>{c.email}</a>.</p>
+
+      <h2>Données collectées</h2>
+      <p>Uniquement celles que vous saisissez dans le formulaire de contact : nom, prénom, adresse e-mail, téléphone, adresse postale, produit ou service demandé, quantité et message.</p>
+
+      <h2>Pourquoi ces données&nbsp;?</h2>
+      <p>Pour répondre à votre demande de commande ou de devis, organiser la livraison ou l’intervention, et, si nécessaire, établir la facture. Elles ne sont ni vendues ni utilisées à des fins publicitaires.</p>
+
+      <h2>Base légale</h2>
+      <p>Votre consentement (case cochée avant l’envoi) et, lorsque vous demandez une commande ou un devis, les mesures précontractuelles prises à votre demande.</p>
+
+      <h2>Durée de conservation</h2>
+      <p>Vos données sont conservées 24 mois après le dernier échange, sauf obligation légale de les conserver plus longtemps (par exemple comptable).</p>
+
+      <h2>Destinataires et sous-traitants</h2>
+      <p>Vos données sont accessibles uniquement à {c.name} et aux prestataires techniques strictement nécessaires : Supabase (hébergement de la base de données) et Resend (envoi de la notification par e-mail).</p>
+
+      <h2>Cookies et traceurs</h2>
+      <p>Ce site n’utilise ni cookie publicitaire ni outil de mesure d’audience. Les polices sont hébergées avec le site. L’espace d’administration, réservé à l’entreprise, enregistre une session de connexion dans le navigateur de l’administrateur.</p>
+
+      <h2>Vos droits</h2>
+      <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement, la limitation ou l’opposition à leur traitement, en écrivant à <a href={`mailto:${c.email}`}>{c.email}</a>. Vous pouvez retirer votre consentement à tout moment. En cas de désaccord, vous pouvez introduire une plainte auprès de l’Autorité de protection des données (<a href="https://www.autoriteprotectiondonnees.be" rel="noopener">autoriteprotectiondonnees.be</a>).</p>
+    </div>
+  </article>
+</Layout>

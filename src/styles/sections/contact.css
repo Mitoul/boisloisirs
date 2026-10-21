@@ -251,3 +251,7 @@
   .form-submit { width: 100%; }
   .contact-page-hero { padding: 42px 0 55px; }
 }
+
+/* Champ piège anti-spam : invisible pour les humains */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.consent a { color: var(--color-primary-action); text-decoration: underline; }

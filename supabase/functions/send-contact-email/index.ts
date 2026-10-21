@@ -1,4 +1,6 @@
-const corsHeaders = {
+// Origines autorisées (secret ALLOWED_ORIGINS, séparées par des virgules). Sans valeur : toutes.
+const allowedOrigins = (Deno.env.get("ALLOWED_ORIGINS") || "").split(",").map((o) => o.trim()).filter(Boolean);
+const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -11,6 +13,11 @@ const json = (body: unknown, status = 200) =>
   });
 
 Deno.serve(async (req) => {
+  const origin = req.headers.get("origin") || "";
+  if (allowedOrigins.length) {
+    if (!allowedOrigins.includes(origin)) return json({ error: "Origin not allowed" }, 403);
+    corsHeaders["Access-Control-Allow-Origin"] = origin;
+  }
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
@@ -22,8 +29,13 @@ Deno.serve(async (req) => {
     return json({ error: "Email service is not configured" }, 500);
   }
 
-  const { request } = await req.json();
-  if (!request) return json({ error: "Missing request" }, 400);
+  let request: Record<string, unknown>;
+  try {
+    ({ request } = await req.json());
+  } catch {
+    return json({ error: "Invalid JSON" }, 400);
+  }
+  if (!isValid(request)) return json({ error: "Invalid request" }, 400);
 
   const requestLabel = request.request_type === "devis" ? "Demande de devis" : "Commande";
   const productLabel = request.service || ({
@@ -77,4 +89,20 @@ function escapeHtml(value: unknown) {
     "'": "&#39;",
     '"': "&quot;",
   }[char] || char));
+}
+
+// La fonction est appelable par n'importe qui : on refuse tout ce qui ne ressemble pas à une vraie demande.
+function isValid(r: Record<string, unknown> | undefined): boolean {
+  if (!r || typeof r !== "object") return false;
+  const text = (key: string, min: number, max: number) =>
+    typeof r[key] === "string" && (r[key] as string).trim().length >= min && (r[key] as string).length <= max;
+  return (
+    ["commande", "devis"].includes(String(r.request_type)) &&
+    ["bois", "pellets", "service"].includes(String(r.product)) &&
+    text("first_name", 1, 80) && text("last_name", 1, 80) &&
+    text("email", 5, 160) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(r.email)) &&
+    text("phone", 6, 30) && text("address", 1, 160) && text("postal_code", 3, 10) && text("city", 1, 80) &&
+    text("message", 1, 3000) &&
+    (r.quantity == null || text("quantity", 0, 120)) && (r.service == null || text("service", 0, 120))
+  );
 }

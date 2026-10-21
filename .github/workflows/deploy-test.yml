@@ -52,5 +52,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: deploy-test
           publish_dir: ./dist
+          cname: test.boisloisirs.be
           force_orphan: true
           commit_message: "Deploy test from develop ${{ github.sha }}"

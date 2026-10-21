@@ -62,9 +62,13 @@ const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || ""
         </label>
       </div>
 
+      <div class="hp-field" aria-hidden="true">
+        <label>Ne pas remplir ce champ<input name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
       <label class="consent">
         <input type="checkbox" name="consent" required />
-        <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande.</span>
+        <span>J’accepte que les informations saisies soient utilisées pour répondre à ma demande (<a href="/vie-privee/">politique de confidentialité</a>).</span>
       </label>
 
       <button class="form-submit" type="submit">Envoyer ma demande</button>
@@ -73,7 +77,7 @@ const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || ""
   </div>
 </section>
 
-<script define:vars={{ supabaseUrl, supabaseKey, contactEmailFunction, defaultRequestType, serviceOptions }}>
+<script define:vars={{ supabaseUrl, supabaseKey, contactEmailFunction, defaultRequestType, serviceOptions, sitePhone: site.company.phone }}>
   const form = document.querySelector('#contact-form');
   const status = document.querySelector('#contact-status');
   const productSelect = document.querySelector('#contact-product');
@@ -136,6 +140,14 @@ const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || ""
     status.textContent = 'Envoi en cours…';
 
     const raw = Object.fromEntries(new FormData(form).entries());
+    if (raw.website) {
+      // Champ piège rempli : c'est un robot. On répond comme si tout allait bien.
+      form.reset();
+      status.className = 'form-status is-success';
+      status.textContent = 'Merci. Votre demande a bien été envoyée.';
+      if (submit instanceof HTMLButtonElement) submit.disabled = false;
+      return;
+    }
     const requestType = String(raw.request_type || 'commande');
     const rawProduct = String(raw.product || '');
     const product = rawProduct.startsWith('service:') ? 'service' : rawProduct;
@@ -164,25 +176,30 @@ const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || ""
           apikey: supabaseKey,
           Authorization: `Bearer ${supabaseKey}`,
           'Content-Type': 'application/json',
-          Prefer: 'return=representation',
+          Prefer: 'return=minimal',
         },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) throw new Error('request_failed');
-      const saved = await response.json();
 
+      // La demande est déjà enregistrée : un échec de la notification e-mail ne doit pas
+      // afficher d'erreur au visiteur (il renverrait sa demande en double).
       if (contactEmailFunction) {
-        const emailResponse = await fetch(contactEmailFunction, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-          },
-          body: JSON.stringify({ request: saved?.[0] || data }),
-        });
-        if (!emailResponse.ok) console.warn('La demande est enregistrée, mais la notification email a échoué.');
+        try {
+          const emailResponse = await fetch(contactEmailFunction, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
+            body: JSON.stringify({ request: data }),
+          });
+          if (!emailResponse.ok) console.warn('La demande est enregistrée, mais la notification email a échoué.');
+        } catch (emailError) {
+          console.warn('La demande est enregistrée, mais la notification email a échoué.', emailError);
+        }
       }
 
       form.reset();
@@ -200,8 +217,6 @@ const contactEmailFunction = import.meta.env.PUBLIC_CONTACT_EMAIL_FUNCTION || ""
       if (submit instanceof HTMLButtonElement) submit.disabled = false;
     }
   });
-
-  const sitePhone = '+32 472 50 60 11';
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
