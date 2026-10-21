@@ -19,10 +19,11 @@ const byPhase = hasPhases
   <section class="gallery chantier">
     <div class="container">
       <p><a href="/realisations/">← Toutes les réalisations</a></p>
-      <span class="chantier-cat">{chantier.category}</span>
-      <h1>{chantier.title}</h1>
-      <p>{chantier.summary}</p>
+      <span class="chantier-cat" id="chantier-cat">{chantier.category}</span>
+      <h1 id="chantier-title">{chantier.title}</h1>
+      <p id="chantier-summary">{chantier.summary}</p>
 
+      <div id="timeline-root" data-slug={chantier.slug}>
       <ol class="timeline">
         {byPhase.map((g) => (
           <li class="timeline-step">
@@ -37,7 +38,21 @@ const byPhase = hasPhases
           </li>
         ))}
       </ol>
+      </div>
     </div>
   </section>
   <Lightbox />
 </Layout>
+
+<script>
+  import { loadChantiers, timelineHtml } from "../../lib/realisations-live";
+  const root = document.getElementById("timeline-root")!;
+  loadChantiers().then((list) => {
+    const c = list?.find((x) => x.slug === root.dataset.slug);
+    if (!c) return;
+    root.innerHTML = timelineHtml(c);
+    document.getElementById("chantier-cat")!.textContent = c.category;
+    document.getElementById("chantier-title")!.textContent = c.title;
+    document.getElementById("chantier-summary")!.textContent = c.summary;
+  });
+</script>

@@ -29,7 +29,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
     }).then((r) => r.ok ? r.json() : []).then((rows) => {
       const item = rows?.find((row) => row.slot === `${product}-hero`);
       const image = imageId ? document.getElementById(imageId) : null;
-      if (item && image instanceof HTMLImageElement) image.src = item.url;
+      if (item && item.url?.startsWith('https://') && image instanceof HTMLImageElement) image.src = item.url;
     }).catch(() => {});
   }
 </script>

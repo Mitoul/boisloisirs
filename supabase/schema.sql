@@ -93,8 +93,8 @@ using (public.is_admin());
 
 insert into public.site_media (product, slot, url)
 values
-  ('wood', 'wood-hero', '/bois-chauffage.jpg'),
-  ('pellets', 'pellets-hero', '/palette-pellets-comfo.png')
+  ('wood', 'wood-hero', '/bois-page.webp'),
+  ('pellets', 'pellets-hero', '/palette-pellets-comfo.webp')
 on conflict (slot) do nothing;
 
 -- Storage : créez un bucket public nommé site-media.

@@ -1,17 +1,14 @@
 ---
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
-
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Portail client | Bois Loisirs" description="Administration du contenu Bois Loisirs">
-  <main class="admin-page">
+<Layout title="Portail client | Bois Loisirs" description="Administration du contenu Bois Loisirs" noindex>
+  <div class="admin-page">
     <div class="container admin-shell">
       <section id="login-panel" class="admin-card">
         <p class="eyebrow">Portail client</p>
         <h1>Administration du site</h1>
-        <p>Connectez-vous pour modifier le prix du bois et les photos des produits.</p>
+        <p>Connectez-vous pour modifier le prix du bois, les photos des produits et les réalisations.</p>
         <form id="login-form" class="admin-form">
           <label>Email<input id="login-email" type="email" required autocomplete="email" /></label>
           <label>Mot de passe<input id="login-password" type="password" required autocomplete="current-password" /></label>
@@ -61,131 +58,33 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
         <div class="admin-section">
+          <h2>Réalisations</h2>
+          <p class="admin-muted">Créez un chantier, ajoutez ses photos (avant, pendant, après) puis cochez « Visible sur le site ». Les photos sont réduites automatiquement. Les changements apparaissent tout de suite sur le site.</p>
+          <form id="chantier-form" class="admin-form chantier-new">
+            <div class="admin-grid two">
+              <label>Titre du nouveau chantier<input id="new-title" required minlength="3" maxlength="120" placeholder="Ex. Abattage à Chastre" /></label>
+              <label>Catégorie
+                <select id="new-category">
+                  <option>Abattage</option><option>Nivellement</option><option>Terrassement</option><option>Aménagement extérieur</option><option>Autre</option>
+                </select>
+              </label>
+            </div>
+            <label>Description courte<textarea id="new-summary" maxlength="400" rows="2" placeholder="Une ou deux phrases sur le chantier"></textarea></label>
+            <button type="submit" class="admin-button">Créer le chantier</button>
+          </form>
+          <p id="chantier-status" class="admin-status" role="status"></p>
+          <div id="chantiers-admin" class="chantiers-admin">Chargement…</div>
+        </div>
+
+        <div class="admin-section">
           <h2>Demandes reçues</h2>
           <div id="requests-list" class="requests-list">Chargement…</div>
         </div>
       </section>
     </div>
-  </main>
+  </div>
 </Layout>
 
-<script type="module" define:vars={{ supabaseUrl, supabaseAnonKey }}>
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-  const url = supabaseUrl;
-  const anonKey = supabaseAnonKey;
-  const loginPanel = document.querySelector('#login-panel');
-  const dashboard = document.querySelector('#dashboard');
-  const loginForm = document.querySelector('#login-form');
-  const loginStatus = document.querySelector('#login-status');
-
-  if (!url || !anonKey) {
-    if (loginStatus) loginStatus.textContent = 'Supabase n’est pas encore configuré. Ajoutez PUBLIC_SUPABASE_URL et PUBLIC_SUPABASE_ANON_KEY dans .env.';
-  } else {
-    const supabase = createClient(url, anonKey);
-    const $ = (id) => document.querySelector(id);
-
-    async function refreshSession() {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) showDashboard();
-      else showLogin();
-    }
-
-    function showLogin() {
-      loginPanel.hidden = false;
-      dashboard.hidden = true;
-    }
-
-    async function showDashboard() {
-      loginPanel.hidden = true;
-      dashboard.hidden = false;
-      await Promise.all([loadSettings(), loadMedia(), loadRequests()]);
-    }
-
-    loginForm?.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      loginStatus.textContent = 'Connexion…';
-      const email = $('#login-email')?.value;
-      const password = $('#login-password')?.value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) loginStatus.textContent = error.message;
-      else loginStatus.textContent = '';
-      await refreshSession();
-    });
-
-    $('#logout')?.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      await refreshSession();
-    });
-
-    async function loadSettings() {
-      const { data, error } = await supabase.from('site_settings').select('*').eq('id', 1).single();
-      if (error) return;
-      $('#price-small').value = data.wood_price_small;
-      $('#price-large').value = data.wood_price_large;
-    }
-
-    $('#save-prices')?.addEventListener('click', async () => {
-      const status = $('#price-status');
-      const small = Number($('#price-small').value);
-      const large = Number($('#price-large').value);
-      const { error } = await supabase.from('site_settings').update({ wood_price_small: small, wood_price_large: large }).eq('id', 1);
-      status.textContent = error ? error.message : 'Prix enregistrés.';
-    });
-
-    async function loadMedia() {
-      const { data } = await supabase.from('site_media').select('*').in('slot', ['wood-hero', 'pellets-hero']);
-      (data || []).forEach((item) => {
-        const preview = item.slot === 'wood-hero' ? $('#wood-preview') : $('#pellets-preview');
-        if (preview) preview.src = item.url;
-      });
-    }
-
-    document.querySelectorAll('[data-upload]').forEach((button) => {
-      button.addEventListener('click', async () => {
-        const slot = button.dataset.upload;
-        const input = slot === 'wood-hero' ? $('#wood-image') : $('#pellets-image');
-        const status = slot === 'wood-hero' ? $('#wood-status') : $('#pellets-status');
-        const file = input?.files?.[0];
-        if (!file) { status.textContent = 'Choisissez d’abord une image.'; return; }
-        if (file.size > 5 * 1024 * 1024) { status.textContent = 'Image trop volumineuse (maximum 5 Mo).'; return; }
-
-        status.textContent = 'Téléversement…';
-        const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-        const path = `products/${slot}.${extension}`;
-        const { error: uploadError } = await supabase.storage.from('site-media').upload(path, file, { upsert: true, contentType: file.type });
-        if (uploadError) { status.textContent = uploadError.message; return; }
-        const { data: publicData } = supabase.storage.from('site-media').getPublicUrl(path);
-        const product = slot === 'wood-hero' ? 'wood' : 'pellets';
-        const { error: mediaError } = await supabase.from('site_media').upsert({ product, slot, url: `${publicData.publicUrl}?v=${Date.now()}` }, { onConflict: 'slot' });
-        status.textContent = mediaError ? mediaError.message : 'Photo mise à jour.';
-        await loadMedia();
-      });
-    });
-
-    async function loadRequests() {
-      const container = $('#requests-list');
-      const { data, error } = await supabase.from('contact_requests').select('*').order('created_at', { ascending: false }).limit(50);
-      if (error) { container.textContent = error.message; return; }
-      if (!data?.length) { container.textContent = 'Aucune demande reçue.'; return; }
-      container.innerHTML = data.map((request) => `
-        <article class="request-item">
-          <div><strong>${escapeHtml(request.first_name)} ${escapeHtml(request.last_name)}</strong> · ${escapeHtml(request.request_type)}</div>
-          <div>${escapeHtml(request.service || request.product)} · ${escapeHtml(request.quantity || 'quantité non précisée')}</div>
-          <div>${escapeHtml(request.email)} · ${escapeHtml(request.phone)}</div>
-          <p>${escapeHtml(request.message)}</p>
-          <small>${new Date(request.created_at).toLocaleString('fr-BE')}</small>
-        </article>
-      `).join('');
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
-    }
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) showDashboard(); else showLogin();
-    });
-    refreshSession();
-  }
+<script>
+  import "../../scripts/admin.js";
 </script>

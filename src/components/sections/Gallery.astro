@@ -12,7 +12,7 @@ const featured = chantiers.filter((c) => c.featured);
       <div class="container">
         <SectionTitle title={gallery.title} subtitle={gallery.subtitle} />
 
-        <div class="gallery-grid">
+        <div class="gallery-grid" id="home-chantiers" data-static={chantiers.map((c) => c.slug).join(",")}>
           {featured.map((c) => (
             <a class="gallery-card" href={`/realisations/${c.slug}/`}>
               <div class="gallery-image">
@@ -31,3 +31,19 @@ const featured = chantiers.filter((c) => c.featured);
     </section>
   )
 }
+
+<script>
+  import { loadChantiers, cardHtml } from "../../lib/realisations-live";
+  const grid = document.getElementById("home-chantiers");
+  if (grid) {
+    const known = (grid.dataset.static || "").split(",");
+    loadChantiers().then((list) => {
+      if (!list) return;
+      const featured = list.filter((c) => c.featured).slice(0, 4);
+      if (!featured.length) return;
+      grid.innerHTML = featured
+        .map((c) => cardHtml(c, known.includes(c.slug) ? `/realisations/${c.slug}/` : `/realisations/voir/?s=${encodeURIComponent(c.slug)}`, { showCount: false, summary: false }))
+        .join("");
+    });
+  }
+</script>

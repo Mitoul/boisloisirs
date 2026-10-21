@@ -48,3 +48,16 @@ Après : **0 violation axe, 0 débordement, 0 image cassée** sur 8 pages × 4 t
 3. Vérifier en ligne (non testable depuis le sandbox) : appels Supabase des pages produits, formulaire de contact, Lighthouse.
 4. Photos d'origine en meilleure résolution (actuellement 600×600).
 5. Mentions légales / vie privée à faire valider par le client.
+
+## Itération 3 — admin des réalisations
+**Mise en service (une seule fois)** : exécuter `supabase/realisations.sql` dans Supabase › SQL Editor (après `schema.sql`). Il crée les tables `chantiers` / `chantier_photos`, les règles d'accès (lecture publique des chantiers publiés, écriture réservée aux admins), la règle de suppression Storage, et recopie les 6 réalisations actuelles. Relançable sans risque.
+
+**Dans `/admin/` › Réalisations** : créer un chantier (brouillon), ajouter plusieurs photos d'un coup (réduites à 1600 px et converties en WebP dans le navigateur), choisir l'étape Avant / Pendant / Après, modifier la description, réordonner (← →), supprimer (la photo est aussi supprimée du stockage), publier, afficher à l'accueil. Publication refusée sans photo.
+
+**Côté public** : les pages restent générées au build (SEO, fonctionne sans JavaScript), puis `src/lib/realisations-live.js` les remplace par les données Supabase. Si Supabase est injoignable ou vide, le contenu du build reste affiché. Les nouveaux chantiers s'ouvrent sur `/realisations/voir/?s=<slug>` (page dynamique, non indexée).
+
+**Autres corrections** : `supabase-js` en dépendance npm (plus d'esm.sh) ; les photos produits envoyées par l'admin sont aussi converties en WebP ; l'image produit n'est remplacée que par une URL https (les anciennes valeurs `/bois-chauffage.jpg` et `.png` du schéma pointaient vers des fichiers qui n'existent plus) ; `/admin` en `noindex` ; un seul `<main>`.
+
+**Tests** : parcours complet rejoué avec un faux serveur Supabase (connexion, création, envoi de 2 photos, étapes, réordonnancement, publication, affichage public + visionneuse, suppression, échappement XSS) : 20/20. Non testé : le vrai Supabase (RLS, Storage) — à valider après exécution du SQL.
+
+**Limites connues** : un chantier d'origine (statique) retiré de la base reste visible sur son ancienne URL tant qu'il n'est pas retiré de `chantiers.js` ; les nouveaux chantiers ne sont pas dans le sitemap ; pas de réordonnancement des chantiers entre eux (les plus récents d'abord).

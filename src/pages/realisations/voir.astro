@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Lightbox from "../../components/realisations/Lightbox.astro";
+---
+<Layout title="Réalisation — Bois, Aménagements & Loisirs" description="Suivez l'évolution de nos chantiers en photos." noindex>
+  <section class="gallery chantier">
+    <div class="container">
+      <p><a href="/realisations/">← Toutes les réalisations</a></p>
+      <span class="chantier-cat" id="chantier-cat"></span>
+      <h1 id="chantier-title">Chargement…</h1>
+      <p id="chantier-summary"></p>
+      <div id="timeline-root"></div>
+    </div>
+  </section>
+  <Lightbox />
+</Layout>
+
+<script>
+  import { loadChantiers, timelineHtml } from "../../lib/realisations-live";
+  const slug = new URLSearchParams(location.search).get("s");
+  const title = document.getElementById("chantier-title")!;
+  loadChantiers().then((list) => {
+    const c = list?.find((x) => x.slug === slug);
+    if (!c) {
+      title.textContent = "Réalisation introuvable";
+      document.getElementById("chantier-summary")!.innerHTML = 'Cette réalisation n’existe plus. <a href="/realisations/">Voir toutes nos réalisations</a>.';
+      return;
+    }
+    document.title = `${c.title} — Réalisations`;
+    document.getElementById("chantier-cat")!.textContent = c.category;
+    title.textContent = c.title;
+    document.getElementById("chantier-summary")!.textContent = c.summary;
+    document.getElementById("timeline-root")!.innerHTML = timelineHtml(c);
+  });
+</script>

@@ -23,3 +23,30 @@
 .request-item p { margin:10px 0; }
 .request-item small { color:var(--color-text-light); }
 @media(max-width:700px){ .admin-card{padding:22px;} .admin-header{flex-direction:column;} .admin-grid.two,.admin-media-grid{grid-template-columns:1fr;} }
+
+/* ===== Réalisations (admin) ===== */
+.admin-form select, .admin-grid select, .chantier-summary textarea, .admin-form textarea { width:100%; padding:13px 14px; border:1px solid var(--color-border); border-radius:10px; font:inherit; background:#fff; }
+.admin-form textarea, .chantier-summary textarea { resize:vertical; }
+.admin-button.danger, .photo-admin-buttons .danger { background:#b3261e; color:#fff; }
+.admin-button:disabled, .photo-admin-buttons button:disabled { opacity:.5; cursor:not-allowed; }
+.chantier-new { margin-bottom:12px; }
+.chantiers-admin { display:grid; gap:24px; margin-top:20px; }
+.chantier-admin { border:1px solid var(--color-border); border-radius:16px; padding:22px; display:grid; gap:14px; }
+.chantier-admin h3 { margin:8px 0 0; }
+.chantier-admin-head { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+.badge { padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:700; background:#e9e9e6; color:var(--color-text); }
+.badge.ok { background:#dff2e2; color:#00510b; }
+.chantier-summary { display:grid; gap:8px; font-weight:600; }
+.chantier-checks { display:flex; flex-wrap:wrap; gap:8px 28px; }
+.chantier-checks label { display:flex; gap:8px; align-items:center; font-weight:600; }
+.chantier-checks input { width:auto; }
+.chantier-actions { display:flex; flex-wrap:wrap; gap:12px; }
+.photo-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr)); gap:16px; }
+.photo-admin { margin:0; display:grid; gap:8px; align-content:start; border:1px solid var(--color-border-light); border-radius:12px; padding:10px; }
+.photo-admin img { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; background:var(--color-surface); }
+.photo-admin select, .photo-admin input { padding:8px 10px; border:1px solid var(--color-border); border-radius:8px; font:inherit; font-size:.9rem; width:100%; }
+.photo-admin-buttons { display:flex; gap:8px; }
+.photo-admin-buttons button { flex:1; padding:8px; border:1px solid var(--color-border); border-radius:8px; background:#fff; cursor:pointer; font-size:1rem; }
+.photo-upload { display:flex; flex-wrap:wrap; gap:14px; align-items:end; padding-top:8px; border-top:1px dashed var(--color-border); }
+.photo-upload label { display:grid; gap:8px; font-weight:600; }
+.photo-upload .admin-button { margin-top:0; }

@@ -14,11 +14,13 @@ import { site } from "../data/site";
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = site.seo.title,
-  description = site.seo.description
+  description = site.seo.description,
+  noindex = false
 } = Astro.props;
 
 /*
@@ -153,7 +155,7 @@ const schema = {
 
 
   {
-    !isProduction && (
+    (!isProduction || noindex) && (
       <meta
         name="robots"
         content="noindex, nofollow, noarchive"

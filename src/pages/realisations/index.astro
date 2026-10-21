@@ -7,7 +7,7 @@ import { chantiers } from "../../content/chantiers";
   <section class="gallery">
     <div class="container">
       <SectionTitle level={1} title="Nos réalisations" subtitle="Suivez l'évolution de nos chantiers, de l'état initial au résultat final." />
-      <div class="gallery-grid">
+      <div class="gallery-grid" id="chantiers-grid" data-static={chantiers.map((c) => c.slug).join(",")}>
         {chantiers.map((c) => (
           <a class="gallery-card" href={`/realisations/${c.slug}/`}>
             <div class="gallery-image"><img src={c.cover} alt={c.title} loading="lazy" decoding="async" /></div>
@@ -23,3 +23,15 @@ import { chantiers } from "../../content/chantiers";
     </div>
   </section>
 </Layout>
+
+<script>
+  import { loadChantiers, cardHtml } from "../../lib/realisations-live";
+  const grid = document.getElementById("chantiers-grid")!;
+  const known = (grid.dataset.static || "").split(",");
+  loadChantiers().then((list) => {
+    if (!list) return;
+    grid.innerHTML = list
+      .map((c) => cardHtml(c, known.includes(c.slug) ? `/realisations/${c.slug}/` : `/realisations/voir/?s=${encodeURIComponent(c.slug)}`))
+      .join("");
+  });
+</script>
