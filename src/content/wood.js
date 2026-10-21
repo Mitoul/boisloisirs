@@ -5,7 +5,7 @@ export const woodProduct = {
     "Du bois de chauffage en vrac, disponible en plusieurs essences et séché à moins de 20 % d'humidité.",
 
   image: {
-    src: "/bois-page.jpg",
+    src: "/bois-page.webp",
     alt: "Bois de chauffage sec prêt à brûler"
   },
 

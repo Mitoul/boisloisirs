@@ -1,7 +1,7 @@
 export const footer = {
   brand: {
     description:
-      "Une entreprise professionnelle au service de ses clients."
+      "Bois de chauffage, travaux forestiers et aménagements extérieurs."
   },
 
   contact: {

@@ -4,9 +4,9 @@
      BRAND COLORS
      ========================================= */
 
-  --color-primary: #008716;
+  --color-primary: #00770f;
   --color-primary-dark: #006b12;
-  --color-primary-action: #008716;
+  --color-primary-action: #00770f;
 
   --color-primary-soft: #edf7ef;
   --color-primary-overlay: rgba(0, 135, 22, 0.12);
@@ -81,7 +81,7 @@
 
   --color-text-muted: #626260;
 
-  --color-text-light: #858580;
+  --color-text-light: #6b6b66;
 
 
   /* =========================================

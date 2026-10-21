@@ -5,7 +5,7 @@ export const pelletProduct = {
     "Comfo Pellets DIN+ fabriqués à partir de bois 100 % résineux belge, disponibles par palette et livrés dans votre région.",
 
   image: {
-    src: "/palette-pellets-comfo.png",
+    src: "/palette-pellets-comfo.webp",
     alt: "Palette de sacs de Comfo Pellets"
   },
 

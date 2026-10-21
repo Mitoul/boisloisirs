@@ -1,66 +1,33 @@
 ---
 import SectionTitle from "../ui/SectionTitle.astro";
-
 import { gallery } from "../../content/gallery";
-import { galleryImages } from "../../content/galleryImages";
+import { chantiers } from "../../content/chantiers";
+
+const featured = chantiers.filter((c) => c.featured);
 ---
 
 {
   gallery.enabled && (
     <section id="gallery" class="gallery">
-
       <div class="container">
-
-        <SectionTitle
-          title={gallery.title}
-          subtitle={gallery.subtitle}
-        />
+        <SectionTitle title={gallery.title} subtitle={gallery.subtitle} />
 
         <div class="gallery-grid">
-
-          {
-            gallery.items.map((item) => {
-              const image = galleryImages[item.image];
-
-              return (
-                <article class="gallery-card">
-
-                  <div class="gallery-image">
-
-                    {
-                      image && (
-                        <img
-                          src={image}
-                          alt={item.alt}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      )
-                    }
-
-                  </div>
-
-                  <div class="gallery-content">
-
-                    <span>
-                      {item.category}
-                    </span>
-
-                    <h3>
-                      {item.title}
-                    </h3>
-
-                  </div>
-
-                </article>
-              );
-            })
-          }
-
+          {featured.map((c) => (
+            <a class="gallery-card" href={`/realisations/${c.slug}/`}>
+              <div class="gallery-image">
+                <img src={c.cover} alt={c.title} loading="lazy" decoding="async" />
+              </div>
+              <div class="gallery-content">
+                <span>{c.category}</span>
+                <h3>{c.title}</h3>
+              </div>
+            </a>
+          ))}
         </div>
 
+        <p class="gallery-more"><a class="btn btn-primary" href="/realisations/">Voir toutes nos réalisations</a></p>
       </div>
-
     </section>
   )
 }

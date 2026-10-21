@@ -9,7 +9,7 @@ const requestType = Astro.url.searchParams.get("type") === "devis" ? "devis" : "
   title="Contact & demande de devis | Bois, Aménagements & Loisirs"
   description="Passez une commande ou demandez un devis pour votre bois de chauffage, vos pellets ou nos services."
 >
-  <main class="contact-page">
+  <div class="contact-page">
     <section class="contact-page-hero">
       <div class="container contact-page-hero-inner">
         <a href="/" class="contact-breadcrumb">Accueil <span>/</span> Contact</a>
@@ -20,5 +20,5 @@ const requestType = Astro.url.searchParams.get("type") === "devis" ? "devis" : "
     </section>
 
     <ContactForm defaultRequestType={requestType} />
-  </main>
+  </div>
 </Layout>

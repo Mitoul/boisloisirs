@@ -6,6 +6,6 @@ const siteUrl = process.env.PUBLIC_SITE_URL || "https://www.boisloisirs.be/";
 export default defineConfig({
   site: siteUrl,
   integrations: [
-    sitemap()
+    sitemap({ filter: (page) => !page.includes("/admin") })
   ]
 });
